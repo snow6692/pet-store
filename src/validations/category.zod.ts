@@ -8,4 +8,4 @@ export const categoryZod = z.object({
     .min(1, { message: "Image is required" })
 });
 
-export type CategoryZod = z.infer<typeof categoryZod>;
+export type categoryZod = z.infer<typeof categoryZod>;

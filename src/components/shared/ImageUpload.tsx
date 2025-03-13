@@ -38,6 +38,7 @@ function ImageUpload({ endpoint, onChange, value }: ImageUploadProps) {
       )}
 
       <UploadDropzone
+        className="size-36"
         endpoint={endpoint}
         onClientUploadComplete={(res) => {
           if (!res) return;
