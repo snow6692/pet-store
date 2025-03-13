@@ -4,7 +4,7 @@
 import prisma from "@/lib/db";
 import { getUser } from "./user.action";
 import { categoryZod } from "@/validations/category.zod";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export async function createCategory(data: categoryZod) {
   try {
@@ -12,6 +12,7 @@ export async function createCategory(data: categoryZod) {
     if (!user) throw new Error("User not found");
     if (user.role !== "ADMIN")
       throw new Error("Not authorized to create category");
+    revalidateTag("categories");
 
     return await prisma.category.create({ data });
   } catch (error: any) {
@@ -33,7 +34,9 @@ export async function updateCategory({
     if (user.role !== "ADMIN")
       throw new Error("Not authorized to update category");
 
-    return await prisma.category.update({ where: { id }, data });
+    const category = await prisma.category.update({ where: { id }, data });
+    revalidateTag("categories");
+    return category;
   } catch (error: any) {
     console.error(error.message);
     throw new Error(error.message);
@@ -47,7 +50,7 @@ export async function deleteCategory(id: string) {
     if (user.role !== "ADMIN")
       throw new Error("Not authorized to delete category");
 
-    revalidatePath("/dashboard/category");
+    revalidateTag("categories");
     return await prisma.category.delete({ where: { id } });
   } catch (error: any) {
     console.error(error.message);

@@ -10,7 +10,7 @@ import ImageUpload from "../shared/ImageUpload";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { createCategory } from "@/actions/category.action";
+import { createCategory, updateCategory } from "@/actions/category.action";
 interface IProps {
   category?: category;
 }
@@ -40,7 +40,12 @@ function CategoryForm({ category }: IProps) {
   const onSubmit = async (data: categoryZod) => {
     // Update
     if (category) {
-      console.log("Updating category:", data);
+      const updatePromise = updateCategory({ data, id: category.id });
+      toast.promise(updatePromise, {
+        loading: "Updating...",
+        success: "Category Updated Successfully!",
+        error: "Error While Updating!",
+      });
     }
     // Create
     else {
@@ -53,8 +58,8 @@ function CategoryForm({ category }: IProps) {
       });
 
       try {
-        await createPromise; 
-        form.reset({ image: "", name: "" });     
+        await createPromise;
+        form.reset({ image: "", name: "" });
       } catch (error) {
         console.error("Error while creating category:", error);
       }

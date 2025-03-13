@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 import { format } from "date-fns";
-import { Eye, PenIcon, XIcon } from "lucide-react";
+import { PenIcon, XIcon } from "lucide-react";
 import { category } from "@prisma/client";
 import { deleteCategory } from "@/actions/category.action";
 import ConfirmDeleteDialog from "../shared/ConfirmDeleteDialog";
 import toast from "react-hot-toast";
+import UpdateDialog from "../shared/UpdateDialog";
 function CategoryTable({ categories }: { categories: category[] }) {
   const handleDelete = async (id: string, name: string) => {
     const promiseDelete = () => deleteCategory(id);
@@ -34,7 +35,6 @@ function CategoryTable({ categories }: { categories: category[] }) {
             <TableHead>Created At</TableHead>
             <TableHead>Update</TableHead>
             <TableHead>Delete</TableHead>
-            <TableHead>Show</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -53,7 +53,9 @@ function CategoryTable({ categories }: { categories: category[] }) {
                 {format(new Date(category.createdAt), "dd-MM-yyyy")}
               </TableCell>
               <TableCell>
-                <PenIcon className=" cursor-pointer text-green-500" />
+                <UpdateDialog category={category}>
+                  <PenIcon className=" cursor-pointer text-green-500" />
+                </UpdateDialog>
               </TableCell>
               <TableCell>
                 <ConfirmDeleteDialog
@@ -63,9 +65,6 @@ function CategoryTable({ categories }: { categories: category[] }) {
                 >
                   <XIcon className=" cursor-pointer text-red-500" />
                 </ConfirmDeleteDialog>
-              </TableCell>
-              <TableCell>
-                <Eye className=" cursor-pointer text-blue-500" />
               </TableCell>
             </TableRow>
           ))}
