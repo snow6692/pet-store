@@ -9,9 +9,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ReactNode } from "react";  
+import { ReactNode } from "react";
 
-function ConfirmDeleteDialog({ children }: { children: ReactNode }) {
+function ConfirmDeleteDialog({
+  children,
+  onDelete,
+  id,
+  name,
+}: {
+  children: ReactNode;
+  onDelete: (id: string, name: string) => void;
+  id: string;
+  name: string;
+}) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -24,8 +34,13 @@ function ConfirmDeleteDialog({ children }: { children: ReactNode }) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
+          <AlertDialogAction
+            className=" bg-red-500 hover:bg-red-600"
+            onClick={() => onDelete(id, name)}
+          >
+            Delete
+          </AlertDialogAction>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

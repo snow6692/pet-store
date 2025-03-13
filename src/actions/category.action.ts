@@ -4,6 +4,7 @@
 import prisma from "@/lib/db";
 import { getUser } from "./user.action";
 import { categoryZod } from "@/validations/category.zod";
+import { revalidatePath } from "next/cache";
 
 export async function createCategory(data: categoryZod) {
   try {
@@ -46,6 +47,7 @@ export async function deleteCategory(id: string) {
     if (user.role !== "ADMIN")
       throw new Error("Not authorized to delete category");
 
+    revalidatePath("/dashboard/category");
     return await prisma.category.delete({ where: { id } });
   } catch (error: any) {
     console.error(error.message);
@@ -61,5 +63,3 @@ export async function getAllCategories() {
     throw new Error(error.message);
   }
 }
-
-

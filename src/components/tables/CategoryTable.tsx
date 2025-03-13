@@ -15,11 +15,15 @@ import { deleteCategory } from "@/actions/category.action";
 import ConfirmDeleteDialog from "../shared/ConfirmDeleteDialog";
 import toast from "react-hot-toast";
 function CategoryTable({ categories }: { categories: category[] }) {
-  const handleDelete = async (id: string) => {
-    await deleteCategory(id);
-    toast.success("deleted successfully");
+  const handleDelete = async (id: string, name: string) => {
+    const promiseDelete = () => deleteCategory(id);
+
+    toast.promise(promiseDelete(), {
+      loading: `${name} is being deleted...`,
+      success: `${name} deleted successfully!`,
+      error: `Failed to delete ${name}`,
+    });
   };
-  console.log(categories);
   return (
     <div className="overflow-x-auto">
       <Table>
@@ -52,11 +56,12 @@ function CategoryTable({ categories }: { categories: category[] }) {
                 <PenIcon className=" cursor-pointer text-green-500" />
               </TableCell>
               <TableCell>
-                <ConfirmDeleteDialog >
-                  <XIcon
-                    className=" cursor-pointer text-red-500"
-                    onClick={() => handleDelete(category.id)}
-                  />
+                <ConfirmDeleteDialog
+                  name={category.name}
+                  id={category.id}
+                  onDelete={() => handleDelete(category.id, category.name)}
+                >
+                  <XIcon className=" cursor-pointer text-red-500" />
                 </ConfirmDeleteDialog>
               </TableCell>
               <TableCell>
