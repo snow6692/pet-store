@@ -1,9 +1,17 @@
-import prisma from "@/lib/db";
+import { getUser } from "@/actions/user.action";
 import React from "react";
 
 async function page() {
-  const user = await prisma.user.findMany();
-  return <div>{user[0].name}</div>;
+  const user = await getUser();
+  console.log("db user "+user);
+  
+
+  return (
+    <div>
+      {user?.name}
+      {user?.role}
+    </div>
+  );
 }
 
 export default page;

@@ -27,7 +27,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   role          UserRole  @default(USER)
-  phone         String?   @unique
+  phone         String?
   address       String?
   city          String?
   state         String?
