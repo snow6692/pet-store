@@ -1,7 +1,6 @@
 "use server";
 import { auth } from "@/auth";
 import prisma from "@/lib/db";
-import { revalidateTag } from "next/cache";
 
 export const getUser = async () => {
   try {
