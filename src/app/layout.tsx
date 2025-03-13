@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "react-hot-toast";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
@@ -39,6 +40,13 @@ export default function RootLayout({
           <ModeToggle />
           <Login />
           {children}
+          <Toaster
+            toastOptions={{
+              position: "top-center",
+              duration: 1500,
+              
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>

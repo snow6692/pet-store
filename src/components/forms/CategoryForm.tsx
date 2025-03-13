@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import ImageUpload from "../shared/ImageUpload";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 interface IProps {
   category?: category;
 }
@@ -40,7 +41,11 @@ function CategoryForm({ category }: IProps) {
       console.log("Updating category:", data);
     } else {
       console.log("Creating new category:", data);
-      
+      toast.promise(myPromise, {
+        loading: "Creating...!",
+        success: "Category Created Successfully!",
+        error: "Error While Creating!",
+      });
       form.reset({
         image: "",
         name: "",
