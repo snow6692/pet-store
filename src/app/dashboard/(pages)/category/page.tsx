@@ -1,7 +1,10 @@
-import React from "react";
+import { getAllCategories } from "@/actions/category.action";
+import CategoryTable from "@/components/tables/CategoryTable";
 
-function CategoryPage() {
-  return <div></div>;
+async function CategoryPage() {
+  const categories = await getAllCategories();
+
+  return <CategoryTable categories={categories} />;
 }
 
 export default CategoryPage;
