@@ -1,11 +1,11 @@
-import { getUser } from "@/actions/user.action";
-import { redirect } from "next/navigation";
+import { cachedUser } from "@/lib/cache/user.cache";
 import React from "react";
 
 async function page() {
-  const user = await getUser();
-  if (!user) return redirect("/login");
-  return <div>{user.name}</div>;
+  const user = await cachedUser();
+
+  // if (!user) return redirect("/login");
+  return <div>{user?.name}</div>;
 }
 
 export default page;
