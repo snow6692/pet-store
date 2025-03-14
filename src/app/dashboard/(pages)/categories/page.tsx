@@ -5,7 +5,7 @@ async function CategoryPage() {
   const data = await getCachedCategories();
 
   if (!data || !data.categories) {
-    return <p>No categories found.</p>; 
+    return <p>No categories found.</p>;
   }
   return <CategoryTable categories={data.categories} />;
 }

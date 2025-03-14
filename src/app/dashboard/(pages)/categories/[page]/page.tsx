@@ -10,7 +10,7 @@ async function CategoryPaginationPage({
   params: Promise<{ page: string }>;
 }) {
   const page = parseInt((await params).page);
-  const limit = 1;
+  const limit = 10;
   const data = await getCachedCategories(page, limit);
   if (!data || !data.categories || data.categories.length === 0) {
     return notFound();
@@ -18,10 +18,11 @@ async function CategoryPaginationPage({
   return (
     <div>
       <CategoryTable categories={data.categories} />
-
-      <Suspense fallback={<p>Loading pagination...</p>}>
-        <PaginationControls page={page} totalPages={data.pages} />
-      </Suspense>
+      <div className=" mt-10">
+        <Suspense fallback={<p>Loading pagination...</p>}>
+          <PaginationControls page={page} totalPages={data.pages} />
+        </Suspense>
+      </div>
     </div>
   );
 }

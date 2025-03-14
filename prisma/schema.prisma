@@ -18,6 +18,17 @@ enum UserRole {
   USER
 }
 
+enum CategoryStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -74,6 +85,40 @@ model category {
   name  String @unique
   image String
 
+  //Relations
+
+  status   CategoryStatus @default(ACTIVE)
+  products Product[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([status])
+}
+
+model Product {
+  id     String   @id @default(uuid())
+  name   String
+  slug   String   @unique
+  images String[]
+
+  price       Float
+  description String?
+  quantity    Int           @default(1)
+  status      ProductStatus @default(ACTIVE)
+  discount    Float?
+  rating      Float         @default(0.0)
+  brand       String?
+  isFeatured  Boolean       @default(false)
+
+  //Relations
+  categoryId String
+  category   category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([slug])
+  @@index([status])
 }
