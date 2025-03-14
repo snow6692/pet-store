@@ -19,7 +19,7 @@ export const productZod = z.object({
     .nonnegative()
     .min(0)
     .max(100, { message: "Discount can't be more than 100%" }),
-  category: z.string().min(1, { message: "Category is required" }),
+  categoryId: z.string().min(1, { message: "Category is required" }),
   brand: z.string().optional(),
   isFeatured: z.boolean().default(false),
 });

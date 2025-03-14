@@ -17,6 +17,8 @@ import { Button } from "../ui/button";
 import ImageUpload from "../shared/ImageUpload";
 import { ProductWithCategories } from "@/lib/types/product.types";
 import { category } from "@prisma/client";
+import toast from "react-hot-toast";
+import { createProduct, updateProduct } from "@/actions/product.action";
 
 interface IProps {
   product?: ProductWithCategories;
@@ -52,7 +54,7 @@ function ProductForm({ product, categories }: IProps) {
           discount: product.discount ?? undefined,
           brand: product.brand ?? undefined,
           isFeatured: product.isFeatured,
-          category: product.category.name,
+          categoryId: product.category.id,
         }
       : {
           name: "",
@@ -65,13 +67,40 @@ function ProductForm({ product, categories }: IProps) {
           discount: 0,
           brand: "",
           isFeatured: false,
-          category: "",
+          categoryId: "",
         },
   });
 
+  const onSubmit = async (data: productZod) => {
+    if (product) {
+      const updatePromise = updateProduct({ data, id: product.id });
+      toast.promise(updatePromise, {
+        loading: "Updating...",
+        success: "Product Updated Successfully!",
+        error: "Error While Updating!",
+      });
+    }
+    // Create
+    else {
+      const createPromise = createProduct(data);
+
+      toast.promise(createPromise, {
+        loading: "Creating...",
+        success: "Product Created Successfully!",
+        error: "Error While Creating!",
+      });
+
+      try {
+        await createPromise;
+        form.reset();
+      } catch (error) {
+        console.error("Error while Product category:", error);
+      }
+    }
+  };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(() => {})} className=" space-y-6 ">
+      <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6 ">
         <div className=" flex gap-10 justify-center items-center">
           {/* Name */}
           <FormField
@@ -130,7 +159,7 @@ function ProductForm({ product, categories }: IProps) {
         {/* Category */}
         <FormField
           control={form.control}
-          name="category"
+          name="categoryId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
