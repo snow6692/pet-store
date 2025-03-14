@@ -60,7 +60,7 @@ export async function deleteCategory(id: string) {
 
 export async function getAllCategories({
   page = 1,
-  limit = 1,
+  limit = 10,
 }: {
   page: number;
   limit: number;

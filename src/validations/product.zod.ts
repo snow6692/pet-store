@@ -11,11 +11,16 @@ export const productZod = z.object({
     .number()
     .positive({ message: "Price must be greater than 0" })
     .min(1, { message: "Enter a valid price" }),
-  description: z.string().optional().nullable(),
+  description: z.string().optional(),
   quantity: z.coerce.number().nonnegative().default(1),
   status: z.enum(["ACTIVE", "INACTIVE", "OUT_OF_STOCK"]),
-  discount: z.coerce.number().nonnegative().optional().nullable(),
-  brand: z.string().optional().nullable(),
+  discount: z.coerce
+    .number()
+    .nonnegative()
+    .min(0)
+    .max(100, { message: "Discount can't be more than 100%" }),
+  category: z.string().min(1, { message: "Category is required" }),
+  brand: z.string().optional(),
   isFeatured: z.boolean().default(false),
 });
 
