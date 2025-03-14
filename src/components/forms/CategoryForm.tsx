@@ -8,7 +8,6 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import ImageUpload from "../shared/ImageUpload";
 import { Button } from "../ui/button";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { createCategory, updateCategory } from "@/actions/category.action";
 interface IProps {
@@ -27,15 +26,6 @@ function CategoryForm({ category }: IProps) {
         },
     resolver: zodResolver(categoryZod),
   });
-
-  useEffect(() => {
-    if (category) {
-      form.reset({
-        image: category.image || "",
-        name: category.name || "",
-      });
-    }
-  }, [category, form]);
 
   const onSubmit = async (data: categoryZod) => {
     // Update

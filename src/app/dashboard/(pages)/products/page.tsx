@@ -9,17 +9,17 @@ type CardLink = {
 
 const cardLinks: CardLink[] = [
   {
-    title: "See All Categories",
-    content: "Go to categories",
-    link: "/dashboard/categories/1",
+    title: "See All Products",
+    content: "Go to Products",
+    link: "/dashboard/products/1",
   },
   {
-    title: "Add New Category",
-    content: "Create a new category",
-    link: "/dashboard/categories/new",
+    title: "Add New Product",
+    content: "Create a new Product",
+    link: "/dashboard/products/new",
   },
 ];
-async function CategoryPage() {
+async function ProductsPage() {
   return (
     <div className="w-3/4 mx-auto">
       <div className="grid grid-cols-3 gap-10">
@@ -33,4 +33,4 @@ async function CategoryPage() {
   );
 }
 
-export default CategoryPage;
+export default ProductsPage;
