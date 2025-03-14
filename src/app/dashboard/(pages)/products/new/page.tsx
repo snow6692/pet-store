@@ -1,10 +1,10 @@
 import ProductForm from "@/components/forms/ProductForm";
-import prisma from "@/lib/db";
+import { getCachedCategories } from "@/lib/cache/category.cache";
 import React from "react";
 
 async function NewProductPage() {
-  const categories = await prisma.category.findMany();
-  return <ProductForm categories={categories} />;
+  const data = await getCachedCategories();
+  return <ProductForm categories={data.categories} />;
 }
 
 export default NewProductPage;

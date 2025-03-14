@@ -3,7 +3,7 @@ import { cache } from "./cache";
 import { MONTH } from "../constants";
 
 export const getCachedCategories = cache(
-  (page = 1, limit = 1) => getAllCategories({ limit, page }),
+  (page = 1, limit = 10) => getAllCategories({ limit, page }),
   ["categories"],
   {
     tags: ["categories"],

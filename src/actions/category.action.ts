@@ -5,6 +5,7 @@ import prisma from "@/lib/db";
 import { getUser } from "./user.action";
 import { categoryZod } from "@/validations/category.zod";
 import { revalidateTag } from "next/cache";
+import { cachedUser } from "@/lib/cache/user.cache";
 
 export async function createCategory(data: categoryZod) {
   try {
@@ -45,7 +46,7 @@ export async function updateCategory({
 
 export async function deleteCategory(id: string) {
   try {
-    const user = await getUser();
+    const user = await cachedUser();
     if (!user) throw new Error("User not found");
     if (user.role !== "ADMIN")
       throw new Error("Not authorized to delete category");
