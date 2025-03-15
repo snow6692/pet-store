@@ -37,6 +37,7 @@ function ProductsTableComponent({ products }: ProductsTableProps) {
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Created At</TableHead>
+            <TableHead>Category</TableHead>
             <TableHead>Update</TableHead>
             <TableHead>Delete</TableHead>
           </TableRow>
@@ -49,6 +50,7 @@ function ProductsTableComponent({ products }: ProductsTableProps) {
                 <TableCell>
                   {format(new Date(product.createdAt), "PP")}
                 </TableCell>
+                <TableCell>{product.category.name }</TableCell>
                 <TableCell>
                   <UpdateProductDialog product={product}>
                     <PenIcon className="cursor-pointer text-green-500" />
