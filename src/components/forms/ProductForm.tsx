@@ -15,14 +15,15 @@ import {
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import ImageUpload from "../shared/ImageUpload";
-import { ProductWithCategories } from "@/lib/types/product.types";
-import { category } from "@prisma/client";
+import { ProductWithCategoriesTable } from "@/lib/types/product.types";
+import { ProductStatus } from "@prisma/client";
 import toast from "react-hot-toast";
 import { createProduct, updateProduct } from "@/actions/product.action";
+import { useGetAllCategories } from "@/hooks/useGetCategories";
+import Loader from "../shared/Loader";
 
 interface IProps {
-  product?: ProductWithCategories;
-  categories: category[];
+  product?: ProductWithCategoriesTable;
 }
 type Status = { value: string; name: string };
 const status: Status[] = [
@@ -39,7 +40,7 @@ const status: Status[] = [
     name: "Out of Stock",
   },
 ];
-function ProductForm({ product, categories }: IProps) {
+function ProductForm({ product }: IProps) {
   const form = useForm({
     resolver: zodResolver(productZod),
     defaultValues: product
@@ -50,7 +51,7 @@ function ProductForm({ product, categories }: IProps) {
           price: product.price,
           description: product.description ?? undefined,
           quantity: product.quantity,
-          status: product.status,
+          status: product.status as ProductStatus,
           discount: product.discount ?? undefined,
           brand: product.brand ?? undefined,
           isFeatured: product.isFeatured,
@@ -70,6 +71,10 @@ function ProductForm({ product, categories }: IProps) {
           categoryId: "",
         },
   });
+
+  const { data: categories, isLoading, error } = useGetAllCategories();
+  if (isLoading) return <Loader />;
+  if (error || !categories) return <p>Error fetching categories</p>;
 
   const onSubmit = async (data: productZod) => {
     if (product) {

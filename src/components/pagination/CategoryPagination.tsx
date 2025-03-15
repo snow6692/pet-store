@@ -10,7 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export default function PaginationControls({
+export default function CategoryPagination({
   page,
   totalPages,
 }: {

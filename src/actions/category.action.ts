@@ -85,3 +85,15 @@ export async function getAllCategories({
     throw new Error(error.message);
   }
 }
+
+export async function getAllCategoriesWithoutPagination() {
+  try {
+    const categories = await prisma.category.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return categories;
+  } catch (error: any) {
+    console.error(error.message);
+    throw new Error(error.message);
+  }
+}

@@ -1,5 +1,4 @@
 "use client";
-import { CategoryStatus } from "@prisma/client";
 import React from "react";
 import {
   Table,
@@ -9,41 +8,16 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import Image from "next/image";
 import { format } from "date-fns";
 import ConfirmDeleteDialog from "../shared/ConfirmDeleteDialog";
-import { XIcon } from "lucide-react";
+import { PenIcon, XIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { deleteProduct } from "@/actions/product.action";
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  images: string[];
-  price: number;
-  description: string | null;
-  quantity: number;
-  status: string;
-  discount: number | null;
-  rating: number;
-  brand: string | null;
-  isFeatured: boolean;
-  categoryId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  category: {
-    id: string;
-    name: string;
-    image: string;
-    status: CategoryStatus;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-}
+import { ProductWithCategoriesTable } from "@/lib/types/product.types";
+import UpdateProductDialog from "../dialogs/UpdateProductDialog";
 
 interface ProductsTableProps {
-  products: Product[];
+  products: ProductWithCategoriesTable[];
 }
 
 function ProductsTableComponent({ products }: ProductsTableProps) {
@@ -61,7 +35,6 @@ function ProductsTableComponent({ products }: ProductsTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Image</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Created At</TableHead>
             <TableHead>Update</TableHead>
@@ -69,37 +42,36 @@ function ProductsTableComponent({ products }: ProductsTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.id}>
-              <TableCell>
-                {/* <Image
-                  src={product.image}
-                  alt={`${product.name} image`}
-                  width={36}
-                  height={36}
-                /> */}
-              </TableCell>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>
-                {format(new Date(product.createdAt), "dd-MM-yyyy")}
-              </TableCell>
-              <TableCell>
-                {/* Update dialog */}
-                {/* <UpdateDialog category={product}>
-                  <PenIcon className=" cursor-pointer text-green-500" />
-                </UpdateDialog> */}
-              </TableCell>
-              <TableCell>
-                <ConfirmDeleteDialog
-                  name={product.name}
-                  id={product.id}
-                  onDelete={() => handleDelete(product.id, product.name)}
-                >
-                  <XIcon className=" cursor-pointer text-red-500" />
-                </ConfirmDeleteDialog>
+          {products?.length ? (
+            products.map((product) => (
+              <TableRow key={product.id}>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>
+                  {format(new Date(product.createdAt), "PP")}
+                </TableCell>
+                <TableCell>
+                  <UpdateProductDialog product={product}>
+                    <PenIcon className="cursor-pointer text-green-500" />
+                  </UpdateProductDialog>
+                </TableCell>
+                <TableCell>
+                  <ConfirmDeleteDialog
+                    name={product.name}
+                    id={product.id}
+                    onDelete={() => handleDelete(product.id, product.name)}
+                  >
+                    <XIcon className="cursor-pointer text-red-500" />
+                  </ConfirmDeleteDialog>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center">
+                No products available
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>

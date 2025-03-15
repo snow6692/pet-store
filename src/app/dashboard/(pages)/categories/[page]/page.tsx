@@ -1,4 +1,4 @@
-import PaginationControls from "@/components/shared/PaginationControls";
+import CategoryPagination from "@/components/pagination/CategoryPagination";
 import CategoryTable from "@/components/tables/CategoryTable";
 import { getCachedCategories } from "@/lib/cache/category.cache";
 import { notFound } from "next/navigation";
@@ -20,7 +20,7 @@ async function CategoryPaginationPage({
       <CategoryTable categories={data.categories} />
       <div className=" mt-10">
         <Suspense fallback={<p>Loading pagination...</p>}>
-          <PaginationControls page={page} totalPages={data.pages} />
+          <CategoryPagination page={page} totalPages={data.pages} />
         </Suspense>
       </div>
     </div>

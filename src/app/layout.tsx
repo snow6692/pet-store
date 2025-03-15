@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import Login from "@/components/shared/Login";
+import QueryProvider from "@/providers/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,23 +32,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ModeToggle />
-          <Login />
-          {children}
-          <Toaster
-            toastOptions={{
-              position: "top-center",
-              duration: 1500,
-              
-            }}
-          />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ModeToggle />
+            <Login />
+            {children}
+            <Toaster
+              toastOptions={{
+                position: "top-center",
+                duration: 1500,
+              }}
+            />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

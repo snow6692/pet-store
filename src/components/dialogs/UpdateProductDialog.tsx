@@ -8,29 +8,30 @@ import {
 } from "@/components/ui/dialog";
 
 import { ReactNode } from "react";
-import CategoryForm from "../forms/CategoryForm";
-import { category } from "@prisma/client";
-function UpdateDialog({
+
+import { ProductWithCategoriesTable } from "@/lib/types/product.types";
+import ProductForm from "../forms/ProductForm";
+function UpdateProductDialog({
   children,
-  category,
+  product,
 }: {
   children: ReactNode;
-  category: category;
+  product: ProductWithCategoriesTable;
 }) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="min-w-dvw">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Edit Product</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when youre done.
+            Make changes to your Product here. Click save when you are done.
           </DialogDescription>
         </DialogHeader>
-        <CategoryForm category={category} />
+        <ProductForm product={product} />
       </DialogContent>
     </Dialog>
   );
 }
 
-export default UpdateDialog;
+export default UpdateProductDialog;

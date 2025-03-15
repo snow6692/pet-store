@@ -14,7 +14,7 @@ import { category } from "@prisma/client";
 import { deleteCategory } from "@/actions/category.action";
 import ConfirmDeleteDialog from "../shared/ConfirmDeleteDialog";
 import toast from "react-hot-toast";
-import UpdateDialog from "../shared/UpdateDialog";
+import UpdateCategoryDialog from "../dialogs/UpdateCategoryDialog";
 function CategoryTable({ categories }: { categories: category[] }) {
   const handleDelete = async (id: string, name: string) => {
     const promiseDelete = () => deleteCategory(id);
@@ -53,9 +53,9 @@ function CategoryTable({ categories }: { categories: category[] }) {
                 {format(new Date(category.createdAt), "dd-MM-yyyy")}
               </TableCell>
               <TableCell>
-                <UpdateDialog category={category}>
+                <UpdateCategoryDialog category={category}>
                   <PenIcon className=" cursor-pointer text-green-500" />
-                </UpdateDialog>
+                </UpdateCategoryDialog>
               </TableCell>
               <TableCell>
                 <ConfirmDeleteDialog

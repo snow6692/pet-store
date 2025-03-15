@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export type ProductStatus = "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK";
+
 export const productZod = z.object({
   name: z.string().trim().min(1, { message: "Product name is required" }),
   slug: z.string().trim().min(1, { message: "Slug is required" }),
@@ -19,7 +21,8 @@ export const productZod = z.object({
     .nonnegative()
     .min(0)
     .max(100, { message: "Discount can't be more than 100%" }),
-  categoryId: z.string().min(1, { message: "Category is required" }),
+  categoryId: z.string().uuid({ message: "Invalid category ID" }),
+
   brand: z.string().optional(),
   isFeatured: z.boolean().default(false),
 });

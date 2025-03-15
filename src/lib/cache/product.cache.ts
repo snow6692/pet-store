@@ -3,7 +3,10 @@ import { cache } from "./cache";
 import { MONTH } from "../constants";
 
 export const getCachedProducts = cache(
-  () => getPaginationProduct({ limit: 10, page: 1 }),
+  (page = 1, limit = 10) => getPaginationProduct({ limit, page }),
   ["products"],
-  { revalidate: MONTH, tags: ["products"] }
+  {
+    tags: ["products"],
+    revalidate: MONTH,
+  }
 );
