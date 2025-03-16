@@ -3,7 +3,7 @@ import Login from "./Login";
 import { ModeToggle } from "./ModeToggle";
 import UserIcon from "./UserIcon";
 import { cachedUser } from "@/lib/cache/user.cache";
-import Cart from "./Cart";
+import CartIcon from "./CartIcon";
 
 async function Navbar() {
   const user = await cachedUser();
@@ -30,7 +30,7 @@ async function Navbar() {
         </div>
 
         <div className="flex items-center space-x-4">
-          <Cart />
+          <CartIcon />
           <ModeToggle />
           {user ? <UserIcon user={user} /> : <Login />}
         </div>

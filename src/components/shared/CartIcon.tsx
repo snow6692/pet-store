@@ -4,7 +4,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getCartCount } from "@/actions/cart.action";
 
-function Cart() {
+function CartIcon() {
   const { data: cartCount = 0 } = useQuery({
     queryKey: ["cartCount"],
     queryFn: getCartCount,
@@ -22,4 +22,4 @@ function Cart() {
   );
 }
 
-export default Cart;
+export default CartIcon;

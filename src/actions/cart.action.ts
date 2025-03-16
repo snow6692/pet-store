@@ -99,3 +99,34 @@ export async function getCartItems() {
 
   return cartItems;
 }
+
+export async function removeCartItem(itemId: string) {
+  return await prisma.cartItem.delete({
+    where: { id: itemId },
+  });
+}
+
+export async function updateCartItemQuantity(itemId: string, quantity: number) {
+  if (quantity < 1) return removeCartItem(itemId);
+
+  return await prisma.cartItem.update({
+    where: { id: itemId },
+    data: { quantity },
+  });
+}
+
+export async function clearCart() {
+  const user = await cachedUser();
+  if (!user) return;
+
+  const cart = await prisma.cart.findUnique({
+    where: { userId: user.id },
+    include: { items: true },
+  });
+
+  if (!cart) return;
+
+  return await prisma.cartItem.deleteMany({
+    where: { cartId: cart.id },
+  });
+}
