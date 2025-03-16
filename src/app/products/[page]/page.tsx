@@ -1,14 +1,10 @@
-import ProductPagination from "@/components/pagination/ProductPagination ";
-import ProductsTableComponent from "@/components/tables/ProductsTableComponent";
+import ProductHomePagination from "@/components/pagination/ProductHomePagination";
+import ProductList from "@/components/shared/ProductList";
 import { getCachedProducts } from "@/lib/cache/product.cache";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 
-async function ProductsTablePage({
-  params,
-}: {
-  params: Promise<{ page: string }>;
-}) {
+async function ProductPage({ params }: { params: Promise<{ page: string }> }) {
   const page = parseInt((await params).page);
   const limit = 10;
 
@@ -16,16 +12,17 @@ async function ProductsTablePage({
   if (!data || !data.products || data.products.length === 0) {
     return notFound();
   }
+
   return (
     <div>
-      <ProductsTableComponent products={data.products} />;
+      <ProductList products={data.products} />
       <div className=" mt-10">
         <Suspense fallback={<p>Loading pagination...</p>}>
-          <ProductPagination page={page} totalPages={data.pages} />
+          <ProductHomePagination page={page} totalPages={data.pages} />
         </Suspense>
       </div>
     </div>
   );
 }
 
-export default ProductsTablePage;
+export default ProductPage;

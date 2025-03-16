@@ -13,4 +13,3 @@ export function cache<T extends Callback>(
 }
 
 
-//Categories

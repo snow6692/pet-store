@@ -14,13 +14,13 @@ import {
 } from "../ui/select";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
-import ImageUpload from "../shared/ImageUpload";
 import { ProductWithCategoriesTable } from "@/lib/types/product.types";
 import { ProductStatus } from "@prisma/client";
 import toast from "react-hot-toast";
 import { createProduct, updateProduct } from "@/actions/product.action";
 import { useGetAllCategories } from "@/hooks/useGetCategories";
 import Loader from "../shared/Loader";
+import ImageUpload from "../shared/ImageUpload";
 
 interface IProps {
   product?: ProductWithCategoriesTable;
@@ -193,9 +193,9 @@ function ProductForm({ product }: IProps) {
               <FormItem>
                 <FormLabel>Images</FormLabel>
                 <ImageUpload
-                  endpoint="multiImageUploader"
                   value={field.value}
                   onChange={field.onChange}
+                  endpoint="multiImageUploader"
                 />
                 <FormMessage />
               </FormItem>
