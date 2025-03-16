@@ -1,7 +1,13 @@
 "use server";
-import { auth } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import prisma from "@/lib/db";
 
+export const login = async () => {
+  await signIn("google");
+};
+export const logout = async () => {
+  await signOut();
+};
 export const getUser = async () => {
   try {
     const session = await auth();

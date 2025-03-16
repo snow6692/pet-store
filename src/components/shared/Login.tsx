@@ -1,13 +1,10 @@
-import { signIn } from "@/auth";
-export default function Login() {
+"use server";
+import { login } from "@/actions/user.action";
+import { Button } from "../ui/button";
+export default async function Login() {
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signIn("google");
-      }}
-    >
-      <button type="submit">Signin with Google</button>
+    <form action={login}>
+      <Button type="submit">Signin with Google</Button>
     </form>
   );
 }

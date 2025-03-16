@@ -5,8 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         hostname: "n8vwykfq75.ufs.sh",
-        protocol:"https",
-        
+        protocol: "https",
+      },
+      {
+        hostname: "lh3.googleusercontent.com",
+        protocol: "https",
       },
     ],
   },

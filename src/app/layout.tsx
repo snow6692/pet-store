@@ -3,9 +3,8 @@ import { Toaster } from "react-hot-toast";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
-import { ModeToggle } from "@/components/shared/ModeToggle";
-import Login from "@/components/shared/Login";
 import QueryProvider from "@/providers/QueryProvider";
+import Navbar from "@/components/shared/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,8 +38,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <ModeToggle />
-            <Login />
+            <Navbar />
             {children}
             <Toaster
               toastOptions={{
