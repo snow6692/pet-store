@@ -61,3 +61,19 @@ export async function addToCart({
     return { success: false, message: error.message };
   }
 }
+
+export async function getCartCount() {
+  try {
+    const user = await cachedUser();
+    if (!user) return 0; 
+    const count = await prisma.cartItem.aggregate({
+      where: { cart: { userId: user.id } },
+      _sum: { quantity: true },
+    });
+
+    return count._sum.quantity || 0;       
+  } catch (error) {
+    console.error("Error fetching cart count:", error);
+    return 0;
+  }
+}
