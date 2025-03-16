@@ -10,12 +10,10 @@ async function Navbar() {
   return (
     <nav className=" shadow-md py-4">
       <div className="container mx-auto flex justify-between items-center px-6">
-        {/* الشعار */}
         <Link href="/" className="text-2xl font-bold text-blue-600">
           MyStore
         </Link>
 
-        {/* الروابط */}
         <div className="hidden md:flex space-x-6">
           <Link
             href="/products/1"

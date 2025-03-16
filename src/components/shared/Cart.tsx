@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCartCount } from "@/actions/cart.action";
 
 function Cart() {
-  const { data: cartCount = 0, refetch } = useQuery({
+  const { data: cartCount = 0 } = useQuery({
     queryKey: ["cartCount"],
     queryFn: getCartCount,
   });

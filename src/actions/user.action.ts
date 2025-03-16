@@ -11,7 +11,6 @@ export const logout = async () => {
 export const getUser = async () => {
   try {
     const session = await auth();
-    console.log("Session Data:", session); //ت
 
     const userId = session?.user?.id;
     if (!userId) {
@@ -23,7 +22,6 @@ export const getUser = async () => {
       where: { id: userId },
     });
 
-    console.log("Fetched User from DB:", user);
     return user;
   } catch (error) {
     console.error("Error fetching user from database:", error);

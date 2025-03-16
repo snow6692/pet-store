@@ -65,15 +65,37 @@ export async function addToCart({
 export async function getCartCount() {
   try {
     const user = await cachedUser();
-    if (!user) return 0; 
+    if (!user) return 0;
     const count = await prisma.cartItem.aggregate({
       where: { cart: { userId: user.id } },
       _sum: { quantity: true },
     });
 
-    return count._sum.quantity || 0;       
+    return count._sum.quantity || 0;
   } catch (error) {
     console.error("Error fetching cart count:", error);
     return 0;
   }
+}
+
+export async function getCartItems() {
+  const user = await cachedUser();
+  if (!user) {
+    console.log("User not found");
+    return [];
+  }
+
+  console.log("User ID:", user.id);
+  const cart = await prisma.cart.findUnique({
+    where: {
+      userId: user.id,
+    },
+  });
+
+  const cartItems = await prisma.cartItem.findMany({
+    where: { cartId: cart?.id },
+    include: { product: true },
+  });
+
+  return cartItems;
 }
