@@ -30,6 +30,11 @@ function UserIcon({ user }: { user: User }) {
         <DropdownMenuItem asChild>
           <Link href="/profile">Profile</Link>
         </DropdownMenuItem>
+        {user.role === "ADMIN" ? (
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard">Dashboard</Link>
+          </DropdownMenuItem>
+        ) : null}
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <Logout />

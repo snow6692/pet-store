@@ -46,8 +46,9 @@ model User {
   sessions  Session[]
   accounts  Account[]
   Cart      Cart?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  Wishlist  Wishlist[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Account {
@@ -117,8 +118,10 @@ model Product {
   category category   @relation(fields: [categoryId], references: [id])
   CartItem CartItem[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Wishlist     Wishlist[]
+  WishlistItem WishlistItem[]
 
   @@index([categoryId])
   @@index([slug])
@@ -149,6 +152,28 @@ model CartItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-// That product can't be added to the same cart twice
+  // That product can't be added to the same cart twice
   @@unique([cartId, productId])
+}
+
+model Wishlist {
+  id        String         @id @default(cuid())
+  userId    String         @unique
+  user      User           @relation(fields: [userId], references: [id])
+  items     WishlistItem[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  Product   Product?       @relation(fields: [productId], references: [id])
+  productId String?
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  wishlistId String
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@unique([wishlistId, productId]) //   Can't add the product twice 
 }
