@@ -126,7 +126,7 @@ model Product {
 }
 
 model Cart {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   userId String @unique
 
   user      User       @relation(fields: [userId], references: [id])
@@ -137,15 +137,18 @@ model Cart {
 }
 
 model CartItem {
-  id        String @id @default(cuid())
+  id        String @id @default(uuid())
   cartId    String
   productId String
   quantity  Int    @default(1)
   //relations
 
   cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+// That product can't be added to the same cart twice
+  @@unique([cartId, productId])
 }

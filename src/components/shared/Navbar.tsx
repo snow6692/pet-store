@@ -3,6 +3,7 @@ import Login from "./Login";
 import { ModeToggle } from "./ModeToggle";
 import UserIcon from "./UserIcon";
 import { cachedUser } from "@/lib/cache/user.cache";
+import Cart from "./Cart";
 
 async function Navbar() {
   const user = await cachedUser();
@@ -30,17 +31,8 @@ async function Navbar() {
           </Link>
         </div>
 
-        {/* زر السلة */}
         <div className="flex items-center space-x-4">
-          <Link href="/cart" className="relative">
-            <span className="text-gray-700 hover:text-blue-600 text-lg">
-              🛒
-            </span>
-            {/* عداد المنتجات في السلة (دائمًا 0 الآن، تحتاج ربطه بالداتا) */}
-            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
-              0
-            </span>
-          </Link>
+          <Cart />
           <ModeToggle />
           {user ? <UserIcon user={user} /> : <Login />}
         </div>
