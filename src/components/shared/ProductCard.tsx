@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import WishlistIcon from "./WishlistIcon";
 
 interface IProps {
   product: ProductWithCategoriesTable;
@@ -10,13 +11,16 @@ interface IProps {
 function ProductCard({ product }: IProps) {
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
-      <Image
-        src={product.images[0]}
-        alt={product.name}
-        className="w-full h-48 object-cover"
-        width={300}
-        height={200}
-      />
+      <div className="relative">
+        <Image
+          src={product.images[0]}
+          alt={product.name}
+          className="w-full h-48 object-cover"
+          width={300}
+          height={200}
+        />
+        <WishlistIcon productId={product.id} />
+      </div>
 
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>

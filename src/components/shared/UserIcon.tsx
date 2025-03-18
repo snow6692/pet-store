@@ -30,6 +30,9 @@ function UserIcon({ user }: { user: User }) {
         <DropdownMenuItem asChild>
           <Link href="/profile">Profile</Link>
         </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/wishlist">Wishlist</Link>
+        </DropdownMenuItem>
         {user.role === "ADMIN" ? (
           <DropdownMenuItem asChild>
             <Link href="/dashboard">Dashboard</Link>

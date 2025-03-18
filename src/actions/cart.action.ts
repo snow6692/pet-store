@@ -24,7 +24,7 @@ export async function addToCart({
 
     if (!product) throw new Error("Product not found");
 
-    //Create cat if not exists
+    //Create cart if not exists
     const cart = await prisma.cart.upsert({
       where: { userId },
       create: {
