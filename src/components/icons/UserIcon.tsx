@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import Image from "next/image";
-import Logout from "./Logout";
+import Logout from "../buttons/Logout";
 import Link from "next/link";
 
 function UserIcon({ user }: { user: User }) {

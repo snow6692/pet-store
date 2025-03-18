@@ -1,9 +1,10 @@
 "use client";
 import { getCartItems, clearCart } from "@/actions/cart.action";
-import CartItem from "./CartItem";
+import CartItem from "../../components/CartItem";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import ConfirmDeleteCartItem from "@/components/shared/ConfirmDeleteCartItem";
+import ConfirmDeleteCartItem from "@/components/dialogs/ConfirmDeleteCartItem";
+import CheckoutDialog from "@/components/dialogs/CheckoutDialog";
 
 export default function CartPage() {
   const queryClient = useQueryClient();
@@ -41,14 +42,21 @@ export default function CartPage() {
             <h2 className="text-xl font-semibold">Total Price:</h2>
             <p className="text-lg font-bold">${totalPrice.toFixed(2)}</p>
           </div>
-          <ConfirmDeleteCartItem onDelete={() => clearCartMutation.mutate()}>
-            <Button
-              disabled={clearCartMutation.isPending}
-              className=" px-4 py-2 rounded"
-            >
-              {clearCartMutation.isPending ? "Clearing..." : "Clear Cart"}
-            </Button>
-          </ConfirmDeleteCartItem>
+          <div className=" flex justify-between">
+            <ConfirmDeleteCartItem onDelete={() => clearCartMutation.mutate()}>
+              <Button
+                disabled={clearCartMutation.isPending}
+                className=" px-4 py-2 rounded hover:bg-red-600 bg-red-500"
+              >
+                {clearCartMutation.isPending ? "Clearing..." : "Clear Cart"}
+              </Button>
+            </ConfirmDeleteCartItem>
+            <CheckoutDialog>
+              <Button asChild className=" bg-green-500 hover:bg-green-600">
+                <span>Checkout</span>
+              </Button>
+            </CheckoutDialog>
+          </div>
         </div>
       )}
     </div>

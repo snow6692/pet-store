@@ -30,17 +30,17 @@ enum ProductStatus {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  role          UserRole  @default(USER)
-  name          String?
-  image         String?
-  phone         String?
-  address       String?
-  city          String?
-  state         String?
-  postalCode    String?
-  country       String?
+  id         String   @id @default(cuid())
+  email      String   @unique
+  role       UserRole @default(USER)
+  name       String?
+  image      String?
+  phone      String?
+  address    String?
+  city       String?
+  state      String?
+  postalCode String?
+  country    String?
 
   sessions  Session[]
   accounts  Account[]
@@ -48,6 +48,7 @@ model User {
   Wishlist  Wishlist[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  Order     Order[]
 }
 
 model Account {
@@ -121,6 +122,7 @@ model Product {
   updatedAt    DateTime       @updatedAt
   Wishlist     Wishlist[]
   WishlistItem WishlistItem[]
+  OrderItem    OrderItem[]
 
   @@index([categoryId])
   @@index([slug])
@@ -161,7 +163,7 @@ model Wishlist {
   user      User           @relation(fields: [userId], references: [id])
   items     WishlistItem[]
   createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  updatedAt DateTime       @default(now())
   Product   Product?       @relation(fields: [productId], references: [id])
   productId String?
 }
@@ -175,4 +177,52 @@ model WishlistItem {
   createdAt  DateTime @default(now())
 
   @@unique([wishlistId, productId]) //   Can't add the product twice 
+}
+
+model Order {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  items         OrderItem[]
+  totalPrice    Float
+  status        OrderStatus    @default(PENDING)
+  paymentMethod PaymentMethod?
+
+  address String
+  phone   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model OrderItem {
+  id      String @id @default(uuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int     @default(1)
+  price     Float
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+enum OrderStatus {
+  PENDING //  
+  PAID //  
+  ON_WAY // 
+  DELIVERED // 
+  CANCELED //  
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  VISA
 }

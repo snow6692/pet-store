@@ -12,7 +12,7 @@ import { format } from "date-fns";
 import { PenIcon, XIcon } from "lucide-react";
 import { category } from "@prisma/client";
 import { deleteCategory } from "@/actions/category.action";
-import ConfirmDeleteDialog from "../shared/ConfirmDeleteDialog";
+import ConfirmDeleteDialog from "../dialogs/ConfirmDeleteDialog";
 import toast from "react-hot-toast";
 import UpdateCategoryDialog from "../dialogs/UpdateCategoryDialog";
 function CategoryTable({ categories }: { categories: category[] }) {

@@ -5,7 +5,7 @@ import React from "react";
 import { updateCartItemQuantity, removeCartItem } from "@/actions/cart.action";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import ConfirmDeleteCartItem from "@/components/shared/ConfirmDeleteCartItem";
+import ConfirmDeleteCartItem from "@/components/dialogs/ConfirmDeleteCartItem";
 
 interface IProps {
   item: cartItemType;
@@ -46,7 +46,6 @@ function CartItem({ item }: IProps) {
     mutationFn: () => removeCartItem(item.id),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["cart"] });
-      
 
       const previousCart = queryClient.getQueryData<cartItemType[]>(["cart"]);
       queryClient.setQueryData<cartItemType[]>(["cart"], (oldCart) =>

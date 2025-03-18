@@ -1,9 +1,9 @@
 import Link from "next/link";
-import Login from "./Login";
-import { ModeToggle } from "./ModeToggle";
-import UserIcon from "./UserIcon";
+import Login from "./buttons/Login";
+import { ModeToggle } from "./buttons/ModeToggle";
 import { cachedUser } from "@/lib/cache/user.cache";
-import CartIcon from "./CartIcon";
+import CartIcon from "./icons/CartIcon";
+import UserIcon from "./icons/UserIcon";
 
 async function Navbar() {
   const user = await cachedUser();

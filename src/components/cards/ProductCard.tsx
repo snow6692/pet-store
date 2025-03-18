@@ -3,7 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import WishlistIcon from "./WishlistIcon";
+import WishlistIcon from "../icons/WishlistIcon";
 
 interface IProps {
   product: ProductWithCategoriesTable;

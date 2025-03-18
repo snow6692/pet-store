@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { format } from "date-fns";
-import ConfirmDeleteDialog from "../shared/ConfirmDeleteDialog";
+import ConfirmDeleteDialog from "../dialogs/ConfirmDeleteDialog";
 import { PenIcon, XIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { deleteProduct } from "@/actions/product.action";
@@ -50,7 +50,7 @@ function ProductsTableComponent({ products }: ProductsTableProps) {
                 <TableCell>
                   {format(new Date(product.createdAt), "PP")}
                 </TableCell>
-                <TableCell>{product.category.name }</TableCell>
+                <TableCell>{product.category.name}</TableCell>
                 <TableCell>
                   <UpdateProductDialog product={product}>
                     <PenIcon className="cursor-pointer text-green-500" />

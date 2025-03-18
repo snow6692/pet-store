@@ -1,4 +1,4 @@
-import DashboardCard from "@/components/shared/DashboardCard";
+import DashboardCard from "@/components/cards/DashboardCard";
 import Link from "next/link";
 
 type CardLink = {
