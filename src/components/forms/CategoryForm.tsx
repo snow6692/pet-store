@@ -83,11 +83,9 @@ function CategoryForm({ category }: IProps) {
               <FormLabel>Add an image</FormLabel>
 
               <ImageUpload
-                endpoint="multiImageUploader"
+                endpoint="singleImageUploader"
                 value={field.value ? [field.value] : []}
-                onChange={(urls) =>
-                  field.onChange(urls.length > 0 ? urls[0] : "")
-                }
+                onChange={(urls) => field.onChange(urls[0] || "")}
               />
               <FormMessage />
             </FormItem>

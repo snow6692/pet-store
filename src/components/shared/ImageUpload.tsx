@@ -90,7 +90,10 @@ function ImageUpload({ endpoint, onChange, value }: ImageUploadProps) {
           />
           {/* Remove the image */}
           <button
-            onClick={() => onChange(value.filter((_, i) => i !== index))}
+            onClick={() => {
+              const updatedImages = value.filter((_, i) => i !== index);
+              onChange(updatedImages.length > 0 ? updatedImages : []);     
+            }}
             className="absolute right-0 top-0 rounded-full bg-red-500 p-1 shadow-sm"
             type="button"
           >

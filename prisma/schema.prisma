@@ -31,11 +31,10 @@ enum ProductStatus {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
   email         String    @unique
-  emailVerified DateTime?
-  image         String?
   role          UserRole  @default(USER)
+  name          String?
+  image         String?
   phone         String?
   address       String?
   city          String?
