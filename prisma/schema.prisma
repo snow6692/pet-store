@@ -216,7 +216,6 @@ model OrderItem {
 
 enum OrderStatus {
   PENDING //  
-  PAID //  
   ON_WAY // 
   DELIVERED // 
   CANCELED //  
