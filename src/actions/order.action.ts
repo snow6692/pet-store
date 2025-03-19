@@ -75,7 +75,7 @@ export async function placeOrder(formData: orderZod) {
     await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
 
     revalidatePath("/cart");
-    revalidatePath("/my-orders");
+    revalidatePath("/my-orders/1");
 
     revalidateTag("products");
 
@@ -104,6 +104,40 @@ export async function getMyOrders({
     where: {
       userId,
     },
+    include: {
+      items: {
+        include: {
+          product: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  const total = await prisma.order.count();
+  return {
+    myOrders,
+    total,
+    page,
+    pages: Math.ceil(total / limit),
+  };
+}
+
+export async function getAllOrders({
+  page = 1,
+  limit = 10,
+}: {
+  page: number;
+  limit: number;
+}) {
+  const skip = (page - 1) * limit;
+
+  const user = await cachedUser();
+
+  if (user?.role !== "ADMIN")
+    return { error: "You are not authorized to show all orders" };
+  const myOrders = await prisma.order.findMany({
+    take: limit,
+    skip,
     include: {
       items: {
         include: {
