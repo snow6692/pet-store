@@ -1,4 +1,4 @@
-import WishlistComponent from "@/components/WishlistComponent";
+import WishlistComponent from "@/components/pages/WishlistComponent";
 import React from "react";
 
 function WishlistPage() {

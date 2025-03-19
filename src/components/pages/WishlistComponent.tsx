@@ -2,9 +2,9 @@
 
 import { getWishlist, removeAllWishlist } from "@/actions/wishlist.action";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import ProductCard from "./cards/ProductCard";
-import { Button } from "./ui/button";
-import ConfirmDeleteCartItem from "./dialogs/ConfirmDeleteCartItem";
+import ProductCard from "../cards/ProductCard";
+import { Button } from "../ui/button";
+import ConfirmDeleteCartItem from "../dialogs/ConfirmDeleteCartItem";
 
 function WishlistComponent() {
   const queryClient = useQueryClient();

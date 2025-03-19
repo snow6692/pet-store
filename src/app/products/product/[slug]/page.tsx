@@ -1,4 +1,4 @@
-import ProductPageComponent from "@/components/ProductPageComponent";
+import ProductPageComponent from "@/components/pages/ProductPageComponent";
 import { getCachedProducts } from "@/lib/cache/product.cache";
 import { notFound } from "next/navigation";
 

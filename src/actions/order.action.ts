@@ -75,6 +75,8 @@ export async function placeOrder(formData: orderZod) {
     await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
 
     revalidatePath("/cart");
+    revalidatePath("/my-orders");
+
     revalidateTag("products");
 
     return { success: "Order placed successfully!", order };
@@ -82,4 +84,40 @@ export async function placeOrder(formData: orderZod) {
     console.error("Error placing order:", error);
     return { error: "Something went wrong. Please try again." };
   }
+}
+
+export async function getMyOrders({
+  page = 1,
+  limit = 10,
+}: {
+  page: number;
+  limit: number;
+}) {
+  const skip = (page - 1) * limit;
+
+  const user = await cachedUser();
+  if (!user) return { error: "You must be logged in" };
+  const userId = user.id;
+  const myOrders = await prisma.order.findMany({
+    take: limit,
+    skip,
+    where: {
+      userId,
+    },
+    include: {
+      items: {
+        include: {
+          product: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  const total = await prisma.order.count();
+  return {
+    myOrders,
+    total,
+    page,
+    pages: Math.ceil(total / limit),
+  };
 }

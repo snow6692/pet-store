@@ -1,6 +1,6 @@
 "use client";
 import { getCartItems, clearCart } from "@/actions/cart.action";
-import CartItem from "../../components/CartItem";
+import CartItem from "../../../components/CartItem";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import ConfirmDeleteCartItem from "@/components/dialogs/ConfirmDeleteCartItem";

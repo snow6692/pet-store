@@ -1,8 +1,8 @@
 import { ProductWithCategoriesTable } from "@/lib/types/product.types";
 import Image from "next/image";
 import React from "react";
-import AddToCartButton from "./buttons/AddToCartButton";
-import { Button } from "./ui/button";
+import AddToCartButton from "../buttons/AddToCartButton";
+import { Button } from "../ui/button";
 
 interface IProps {
   product: ProductWithCategoriesTable;
