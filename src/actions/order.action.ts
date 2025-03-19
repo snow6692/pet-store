@@ -4,6 +4,7 @@ import prisma from "@/lib/db";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { orderZod } from "@/validations/order.zod";
 import { cachedUser } from "@/lib/cache/user.cache";
+import { OrderStatus } from "@prisma/client";
 
 export async function placeOrder(formData: orderZod) {
   const parsed = orderZod.safeParse(formData);
@@ -89,9 +90,11 @@ export async function placeOrder(formData: orderZod) {
 export async function getMyOrders({
   page = 1,
   limit = 10,
+  isAdmin,
 }: {
   page: number;
   limit: number;
+  isAdmin?: boolean;
 }) {
   const skip = (page - 1) * limit;
 
@@ -101,9 +104,11 @@ export async function getMyOrders({
   const myOrders = await prisma.order.findMany({
     take: limit,
     skip,
-    where: {
-      userId,
-    },
+    where: isAdmin
+      ? {}
+      : {
+          userId,
+        },
     include: {
       items: {
         include: {
@@ -122,36 +127,18 @@ export async function getMyOrders({
   };
 }
 
-export async function getAllOrders({
-  page = 1,
-  limit = 10,
-}: {
-  page: number;
-  limit: number;
-}) {
-  const skip = (page - 1) * limit;
-
-  const user = await cachedUser();
-
-  if (user?.role !== "ADMIN")
-    return { error: "You are not authorized to show all orders" };
-  const myOrders = await prisma.order.findMany({
-    take: limit,
-    skip,
-    include: {
-      items: {
-        include: {
-          product: true,
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-  const total = await prisma.order.count();
-  return {
-    myOrders,
-    total,
-    page,
-    pages: Math.ceil(total / limit),
-  };
+export async function updateOrderStatus(
+  orderId: string,
+  newStatus: OrderStatus
+) {
+  try {
+    const updatedOrder = await prisma.order.update({
+      where: { id: orderId },
+      data: { status: newStatus },
+    });
+    return updatedOrder;
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    return null;
+  }
 }
