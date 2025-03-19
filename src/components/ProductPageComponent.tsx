@@ -2,6 +2,7 @@ import { ProductWithCategoriesTable } from "@/lib/types/product.types";
 import Image from "next/image";
 import React from "react";
 import AddToCartButton from "./buttons/AddToCartButton";
+import { Button } from "./ui/button";
 
 interface IProps {
   product: ProductWithCategoriesTable;
@@ -38,7 +39,11 @@ function ProductPageComponent({ product }: IProps) {
             </p>
           </div>
         </div>
-        <AddToCartButton productId={product.id} quantity={1} />
+        {product.quantity === 0 ? (
+          <Button variant={"outline"}>Out of stock</Button>
+        ) : (
+          <AddToCartButton productId={product.id} quantity={1} />
+        )}
       </div>
     </div>
   );

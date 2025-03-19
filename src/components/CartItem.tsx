@@ -13,6 +13,7 @@ interface IProps {
 
 function CartItem({ item }: IProps) {
   const queryClient = useQueryClient();
+  const maxQuantity = item.product.quantity;
 
   const updateQuantityMutation = useMutation({
     mutationFn: (newQuantity: number) =>
@@ -88,7 +89,9 @@ function CartItem({ item }: IProps) {
         </Button>
         <Button
           onClick={() => updateQuantityMutation.mutate(item.quantity + 1)}
-          disabled={updateQuantityMutation.isPending}
+          disabled={
+            updateQuantityMutation.isPending || item.quantity >= maxQuantity
+          }
           className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
         >
           +
