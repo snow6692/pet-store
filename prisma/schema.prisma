@@ -188,9 +188,14 @@ model Order {
   totalPrice    Float
   status        OrderStatus    @default(PENDING)
   paymentMethod PaymentMethod?
-
-  address String
-  phone   String
+  name          String
+  email         String
+  phone         String
+  address       String
+  city          String
+  state         String
+  country       String
+  postalCode    String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

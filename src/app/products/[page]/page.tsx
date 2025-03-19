@@ -1,5 +1,5 @@
 import ProductHomePagination from "@/components/pagination/ProductHomePagination";
-import ProductList from "@/components/shared/ProductList";
+import ProductList from "@/components/ProductList";
 import { getCachedProducts } from "@/lib/cache/product.cache";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";

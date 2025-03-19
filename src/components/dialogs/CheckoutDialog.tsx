@@ -1,18 +1,32 @@
 import { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
+import { placeOrder } from "@/actions/order.action";
+import { toast } from "react-hot-toast";
+import CheckoutForm from "../forms/CheckoutForm";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import CheckoutForm from "../forms/CheckoutForm"; // الفورم الموحد
-// import { createOrder } from "@/actions/order.action"; // API لإنشاء الأوردر
+} from "../ui/dialog";
+import { orderZod } from "@/validations/order.zod";
+import { useQueryClient } from "@tanstack/react-query";
 
 function CheckoutDialog({ children }: { children: ReactNode }) {
-  const handleCOD = async () => {
-    // await createOrder(userData, "cash_on_delivery"); // حفظ الأوردر كـ COD
+  const queryClient = useQueryClient();
+
+  const handleCashOnDelivery = async (data: orderZod) => {
+    const promise = placeOrder(data);
+
+    toast.promise(promise, {
+      loading: "Creating order...",
+      error: "Failed to make an order",
+      success: "Order Created Successfully!",
+    });
+    if ((await promise).success) {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["cartCount"] });
+    }
   };
 
   return (
@@ -25,23 +39,7 @@ function CheckoutDialog({ children }: { children: ReactNode }) {
           <DialogTitle>Choose Payment Method</DialogTitle>
         </DialogHeader>
 
-        <CheckoutForm />
-
-        <div className="flex flex-col gap-4">
-          <Button
-            className="bg-blue-500 hover:bg-blue-600 text-white w-full"
-            onClick={() => console.log("Redirect to Stripe Payment")}
-          >
-            Pay with Visa 💳
-          </Button>
-
-          <Button
-            className="bg-gray-700 hover:bg-gray-800 text-white w-full"
-            onClick={handleCOD}
-          >
-            Pay on Delivery 🚚
-          </Button>
-        </div>
+        <CheckoutForm onSubmit={handleCashOnDelivery} />
       </DialogContent>
     </Dialog>
   );

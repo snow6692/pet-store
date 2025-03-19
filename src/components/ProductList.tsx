@@ -1,5 +1,5 @@
 import { ProductWithCategoriesTable } from "@/lib/types/product.types";
-import ProductCard from "../cards/ProductCard";
+import ProductCard from "./cards/ProductCard";
 
 interface ProductsList {
   products: ProductWithCategoriesTable[];
