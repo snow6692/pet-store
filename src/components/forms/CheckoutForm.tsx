@@ -17,18 +17,18 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import PaymentDialog from "../dialogs/PaymentDialog";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutForm({
   onSubmit,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit: (data: any) => void;
+  onSubmit: (data: orderZod) => void;
 }) {
   const { data: user } = useQuery({
     queryKey: ["user"],
     queryFn: cachedUser,
   });
-
+  const router = useRouter();
   const form = useForm<orderZod>({
     resolver: zodResolver(orderZod),
     defaultValues: {
@@ -192,9 +192,17 @@ export default function CheckoutForm({
         {paymentMethod === "CASH_ON_DELIVERY" ? (
           <Button type="submit">Cash On Delivery</Button>
         ) : (
-          <PaymentDialog>
-            <Button asChild className=" bg-green-500 hover:bg-green-600">
-              <span> Visa </span>
+          <PaymentDialog
+            onSuccess={() => {
+              const orderData = form.getValues();
+              const queryString = new URLSearchParams(
+                orderData as Record<string, string>
+              ).toString();
+              router.push(`/success?${queryString}`);
+            }}
+          >
+            <Button asChild className="bg-green-500 hover:bg-green-600">
+              <span>Visa</span>
             </Button>
           </PaymentDialog>
         )}

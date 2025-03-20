@@ -77,6 +77,7 @@ export async function placeOrder(formData: orderZod) {
 
     revalidatePath("/cart");
     revalidatePath("/my-orders/1");
+    revalidatePath("/dashboard/orders/1");
 
     revalidateTag("products");
 
