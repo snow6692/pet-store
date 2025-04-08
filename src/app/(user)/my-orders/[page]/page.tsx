@@ -1,6 +1,6 @@
 import { getMyOrders } from "@/actions/order.action";
 import MyOrdersPageComponent from "@/components/pages/MyOrdersPageComponent";
-import MyOrdersHomePagination from "@/components/pagination/MyOrdersHomePagination";
+import MyOrdersHomePagination from "@/components/pagination/MyOrdersHomePagination"; 
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 

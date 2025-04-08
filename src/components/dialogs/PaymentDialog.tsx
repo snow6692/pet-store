@@ -1,5 +1,4 @@
-// "use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   Dialog,
@@ -13,42 +12,56 @@ import { useMutation } from "@tanstack/react-query";
 import { loadStripe } from "@stripe/stripe-js";
 import { config } from "@/lib/envConfig";
 import { useCartTotal } from "@/hooks/CartTotalContext";
+import { placeOrder } from "@/actions/order.action";
 
 const stripePromise = loadStripe(config.stripe.public);
 
 function PaymentDialog({
   children,
+  orderData, // البيانات القادمة من CheckoutForm
   onSuccess,
 }: {
   children: React.ReactNode;
-  onSuccess: () => void; //
+  orderData: any;
+  onSuccess: () => void;
 }) {
   const totalPrice = useCartTotal();
-
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      const response = await fetch("/api/stripe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: totalPrice * 100 }),
-      });
+      sessionStorage.setItem("pendingOrder", JSON.stringify(orderData)); // ✅ حفظ الطلب مؤقتًا
+      const response = await placeOrder(orderData); // ✅ استدعاء السيرفر أكشن
 
-      if (!response.ok) throw new Error("Failed to create checkout session");
-      return response.json();
+      console.log("Server Action Response:", response); // ✅ التحقق من الاستجابة
+
+      if (response.error) throw new Error(response.error);
+      return response;
     },
-    onSuccess: async (session) => {
-      const stripe = await stripePromise;
-      if (stripe) {
+    onSuccess: async (data) => {
+      if (data.sessionId) {
+        const stripe = await stripePromise;
+        if (!stripe) {
+          console.error("Stripe failed to load");
+          return;
+        }
+
+        console.log("Redirecting to Stripe with session ID:", data.sessionId);
+
         const { error } = await stripe.redirectToCheckout({
-          sessionId: session.id,
+          sessionId: data.sessionId,
         });
 
-        if (!error) {
-          onSuccess(); // بعد نجاح الدفع، استدعِ onSubmit لإنشاء الطلب
+        if (error) {
+          console.error("Stripe Checkout error:", error.message);
         } else {
-          console.error(error);
+          onSuccess();
         }
+      } else {
+        console.log("Order placed successfully without Stripe.");
+        onSuccess();
       }
+    },
+    onError: (error) => {
+      console.error("Mutation error:", error.message);
     },
   });
 
@@ -59,14 +72,8 @@ function PaymentDialog({
         <DialogHeader>
           <DialogTitle>Visa Payment</DialogTitle>
         </DialogHeader>
-        <p className="text-gray-600">
-          Click the button below to proceed with Visa payment.
-        </p>
-        <Button
-          onClick={() => mutate()}
-          disabled={isPending}
-          className="w-full bg-green-500 hover:bg-green-600"
-        >
+        <p className="text-gray-600">Proceed with Visa payment.</p>
+        <Button onClick={() => mutate()} disabled={isPending}>
           {isPending ? "Processing..." : `Pay $${totalPrice}`}
         </Button>
       </DialogContent>

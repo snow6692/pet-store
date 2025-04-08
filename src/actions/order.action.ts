@@ -5,7 +5,15 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { orderZod } from "@/validations/order.zod";
 import { cachedUser } from "@/lib/cache/user.cache";
 import { OrderStatus } from "@prisma/client";
+import Stripe from "stripe";
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: "2025-02-24.acacia",
+});
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 export async function placeOrder(formData: orderZod) {
   const parsed = orderZod.safeParse(formData);
   if (!parsed.success) {
@@ -42,11 +50,34 @@ export async function placeOrder(formData: orderZod) {
       0
     );
 
+    if (payment === "VISA") {
+      // إنشاء الجلسة فقط بعد التأكد من صحة الطلبات
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`, // إعادة توجيه بعد الدفع
+        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cart`,
+        customer_email: email,
+        line_items: cart.items.map((item) => ({
+          price_data: {
+            currency: "usd",
+            product_data: { name: item.product.name },
+            unit_amount: item.product.price * 100,
+          },
+          quantity: item.quantity,
+        })),
+      });
+
+      // قم بتخزين الـ sessionId الذي أرسلته
+      return { sessionId: session.id };
+    }
+
+    // إذا كان الدفع "CASH_ON_DELIVERY"
     const order = await prisma.order.create({
       data: {
         userId: user.id,
         totalPrice,
-        paymentMethod: payment,
+        paymentMethod: "CASH_ON_DELIVERY",
         status: "PENDING",
         address,
         phone,
@@ -78,7 +109,6 @@ export async function placeOrder(formData: orderZod) {
     revalidatePath("/cart");
     revalidatePath("/my-orders/1");
     revalidatePath("/dashboard/orders/1");
-
     revalidateTag("products");
 
     return { success: "Order placed successfully!", order };

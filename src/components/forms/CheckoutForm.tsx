@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { cachedUser } from "@/lib/cache/user.cache";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { orderZod } from "@/validations/order.zod";
@@ -16,35 +18,32 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import PaymentDialog from "../dialogs/PaymentDialog";
-import { useRouter } from "next/navigation";
+import { placeOrder } from "@/actions/order.action";
+import { toast } from "react-hot-toast";
+import { loadStripe } from "@stripe/stripe-js";
+import { config } from "@/lib/envConfig";
 
-export default function CheckoutForm({
-  onSubmit,
-}: {
-  onSubmit: (data: orderZod) => void;
-}) {
-  const { data: user } = useQuery({
-    queryKey: ["user"],
-    queryFn: cachedUser,
-  });
-  const router = useRouter();
-  const form = useForm<orderZod>({
+const stripePromise = loadStripe(config.stripe.public);
+
+export default function CheckoutForm() {
+  const { data: user } = useQuery({ queryKey: ["user"], queryFn: cachedUser });
+  const queryClient = useQueryClient();
+
+  const form = useForm({
     resolver: zodResolver(orderZod),
     defaultValues: {
-      email: "",
-      address: "",
-      name: "",
-      phone: "",
-      postalCode: "",
-      city: "",
-      state: "",
-      country: "",
+      email: user?.email || "",
+      address: user?.address || "",
+      name: user?.name || "",
+      phone: user?.phone || "",
+      postalCode: user?.postalCode || "",
+      city: user?.city || "",
+      state: user?.state || "",
+      country: user?.country || "",
       payment: "CASH_ON_DELIVERY",
     },
   });
 
-  const paymentMethod = form.watch("payment");
   useEffect(() => {
     if (user) {
       form.reset({
@@ -60,11 +59,40 @@ export default function CheckoutForm({
       });
     }
   }, [user, form]);
+  const handleSubmit = async (data: orderZod) => {
+    if (data.payment === "CASH_ON_DELIVERY") {
+      const promise = placeOrder(data);
+      toast.promise(promise, {
+        loading: "Creating order...",
+        error: "Failed to make an order",
+        success: "Order Created Successfully!",
+      });
+      if ((await promise).success) {
+        queryClient.invalidateQueries({ queryKey: ["cart"] });
+        queryClient.invalidateQueries({ queryKey: ["cartCount"] });
+      }
+    } else {
+      try {
+        const orderResponse = await placeOrder(data);
+        if (orderResponse.sessionId) {
+          const stripe = await stripePromise;
+          const { error } = await stripe.redirectToCheckout({
+            sessionId: orderResponse.sessionId,
+          });
+
+          if (error) {
+            toast.error(error.message!);
+          }
+        }
+      } catch (error: any) {
+        toast.error("Payment failed. Try again.");
+      }
+    }
+  };
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-        {/* Name */}
+      <form className="space-y-4" onSubmit={form.handleSubmit(handleSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -102,6 +130,8 @@ export default function CheckoutForm({
             </FormItem>
           )}
         />
+
+        {/* Payment Method */}
         <FormField
           control={form.control}
           name="payment"
@@ -189,22 +219,10 @@ export default function CheckoutForm({
           )}
         />
 
-        {paymentMethod === "CASH_ON_DELIVERY" ? (
-          <Button type="submit">Cash On Delivery</Button>
+        {form.watch("payment") === "CASH_ON_DELIVERY" ? (
+          <Button type="submit">Submit Order</Button>
         ) : (
-          <PaymentDialog
-            onSuccess={() => {
-              const orderData = form.getValues();
-              const queryString = new URLSearchParams(
-                orderData as Record<string, string>
-              ).toString();
-              router.push(`/success?${queryString}`);
-            }}
-          >
-            <Button asChild className="bg-green-500 hover:bg-green-600">
-              <span>Visa</span>
-            </Button>
-          </PaymentDialog>
+          <Button type="submit">Proceed to Visa Payment</Button>
         )}
       </form>
     </Form>

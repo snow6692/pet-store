@@ -7,5 +7,6 @@ export const config = {
   stripe: {
     public: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!,
     secret: process.env.STRIPE_SECRET_KEY!,
+    url: process.env.NEXT_PUBLIC_BASE_URL!,
   },
 };
