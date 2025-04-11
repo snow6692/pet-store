@@ -1,4 +1,6 @@
-import ProductPageComponent from "@/components/pages/ProductPageComponent";
+import RatingForm from "@/components/forms/RatingForm";
+import ProductDetails from "@/components/ProductDetails";
+import RatingList from "@/components/RatingList";
 import { getCachedProducts } from "@/lib/cache/product.cache";
 import { notFound } from "next/navigation";
 
@@ -38,7 +40,16 @@ async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
 
   if (!product) return notFound();
 
-  return <ProductPageComponent product={product} />;
+  return (
+    <div className="container mx-auto p-6 space-y-10">
+      <ProductDetails product={product} />
+
+      <div>
+        <RatingForm productId={product.id} />
+      </div>
+      <RatingList productId={product.id} />
+    </div>
+  );
 }
 
 export default ProductPage;

@@ -30,17 +30,18 @@ enum ProductStatus {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  email      String   @unique
-  role       UserRole @default(USER)
-  name       String?
-  image      String?
-  phone      String?
-  address    String?
-  city       String?
-  state      String?
-  postalCode String?
-  country    String?
+  id            String    @id @default(cuid())
+  email         String    @unique
+  role          UserRole  @default(USER)
+  name          String?
+  emailVerified DateTime?
+  image         String?
+  phone         String?
+  address       String?
+  city          String?
+  state         String?
+  postalCode    String?
+  country       String?
 
   sessions  Session[]
   accounts  Account[]
@@ -141,11 +142,12 @@ model Rating {
   product   Product @relation(fields: [productId], references: [id])
   productId String
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-    createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  @@unique([productId, userId]) 
+
+  @@unique([productId, userId])
 }
 
 model Cart {
