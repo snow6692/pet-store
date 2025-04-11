@@ -115,3 +115,45 @@ export async function deleteProduct(id: string) {
     throw new Error(error.message);
   }
 }
+
+// Search and filters
+export async function searchProducts({
+  search,
+  categoryId,
+}: {
+  search?: string;
+  categoryId?: string;
+}) {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        AND: [
+          search
+            ? {
+                name: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              }
+            : {},
+          categoryId
+            ? {
+                categoryId,
+              }
+            : {},
+        ],
+      },
+      include: {
+        category: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return products;
+  } catch (error: any) {
+    console.error("Error searching products:", error.message);
+    throw new Error("Something went wrong while searching products.");
+  }
+}

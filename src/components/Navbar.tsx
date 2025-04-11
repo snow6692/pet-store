@@ -4,6 +4,7 @@ import { ModeToggle } from "./buttons/ModeToggle";
 import { cachedUser } from "@/lib/cache/user.cache";
 import CartIcon from "./icons/CartIcon";
 import UserIcon from "./icons/UserIcon";
+import Search from "./Search";
 
 async function Navbar() {
   const user = await cachedUser();
@@ -28,6 +29,7 @@ async function Navbar() {
             Contact
           </Link>
         </div>
+        <Search />
 
         <div className="flex items-center space-x-4">
           <CartIcon />
