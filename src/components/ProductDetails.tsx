@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import ProductImageSelector from "./ProductImageSelector";
 
 function ProductDetails({ product }: { product: ProductWithCategoriesTable }) {
-  const averageRating = product.rating ?? 0; // Handle null case
+  const averageRating = product.rating ?? 0; //   
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, index) => (

@@ -43,14 +43,18 @@ model User {
   postalCode    String?
   country       String?
 
-  sessions  Session[]
-  accounts  Account[]
-  Cart      Cart?
-  Wishlist  Wishlist[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Order     Order[]
-  Rating    Rating[]
+  sessions     Session[]
+  accounts     Account[]
+  Cart         Cart?
+  Wishlist     Wishlist[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Order        Order[]
+  Rating       Rating[]
+  posts        Post[]
+  upvotes      Upvote[]
+  notification Notification[]
+  comments     Comment[]
 }
 
 model Account {
@@ -240,6 +244,66 @@ model OrderItem {
   @@index([productId])
 }
 
+// Community 
+model Post {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+  image       String?
+
+  //Relations
+  User     User      @relation(fields: [userId], references: [id])
+  userId   String
+  upvotes  Upvote[]
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Upvote {
+  id     String @id @default(uuid())
+  //Relations
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+
+  @@unique([userId, postId])
+}
+
+model Comment {
+  id      String @id @default(uuid())
+  content String
+  post    Post   @relation(fields: [postId], references: [id])
+  postId  String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  parentId String? // null ? comment : a parent for replies
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id]) // parent is the comment that we will reply to
+  replies  Comment[] @relation("CommentReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id      String           @id @default(uuid())
+  type    NotificationEnum
+  message String
+  isRead  Boolean          @default(false)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  createdAt DateTime @default(now())
+}
+
 enum OrderStatus {
   PENDING
   ON_WAY
@@ -250,4 +314,9 @@ enum OrderStatus {
 enum PaymentMethod {
   CASH_ON_DELIVERY
   VISA
+}
+
+enum NotificationEnum {
+  UPVOTE
+  COMMENT
 }
