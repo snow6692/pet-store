@@ -5,6 +5,7 @@ import { cachedUser } from "@/lib/cache/user.cache";
 import CartIcon from "./icons/CartIcon";
 import UserIcon from "./icons/UserIcon";
 import Search from "./Search";
+import FilterByCategory from "./FilterByCategory";
 
 async function Navbar() {
   const user = await cachedUser();
@@ -30,6 +31,7 @@ async function Navbar() {
           </Link>
         </div>
         <Search />
+        <FilterByCategory />
 
         <div className="flex items-center space-x-4">
           <CartIcon />

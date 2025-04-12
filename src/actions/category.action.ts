@@ -97,3 +97,28 @@ export async function getAllCategoriesWithoutPagination() {
     throw new Error(error.message);
   }
 }
+
+export async function getProductsByCategory(category?: string) {
+  try {
+    const products = await prisma.product.findMany({
+      where: category && category !== "all"
+        ? {
+            category: {
+              name: category,
+            },
+          }
+        : {},
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        category: true,
+      },
+    });
+
+    return products;
+  } catch (error: any) {
+    console.error(error.message);
+    throw new Error("Failed to fetch products.");
+  }
+}
