@@ -157,3 +157,30 @@ export async function searchProducts({
     throw new Error("Something went wrong while searching products.");
   }
 }
+
+export async function getRelatedProducts(
+  categoryName: string,
+  productId: string
+) {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        category: {
+          name: categoryName,
+        },
+        NOT: {
+          id: productId, //
+        },
+      },
+      take: 4, //
+      include: {
+        category: true,
+      },
+    });
+
+    return products;
+  } catch (error: any) {
+    console.error(error.message);
+    throw new Error(error.message);
+  }
+}

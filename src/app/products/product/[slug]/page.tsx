@@ -1,3 +1,5 @@
+import { getRelatedProducts } from "@/actions/product.action";
+import ProductCard from "@/components/cards/ProductCard";
 import RatingForm from "@/components/forms/RatingForm";
 import ProductDetails from "@/components/ProductDetails";
 import RatingList from "@/components/RatingList";
@@ -40,10 +42,24 @@ async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
 
   if (!product) return notFound();
 
+  const relatedProducts = await getRelatedProducts(
+    product.category.name,
+    product.id
+  );
+
   return (
     <div className="container mx-auto p-6 space-y-10">
       <ProductDetails product={product} />
+      {/* Related products */}
 
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold"> Related products</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {relatedProducts.map((product) => (
+            <ProductCard product={product} key={product.id} />
+          ))}
+        </div>
+      </div>
       <div>
         <RatingForm productId={product.id} />
       </div>
