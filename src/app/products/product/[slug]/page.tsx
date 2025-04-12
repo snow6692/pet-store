@@ -33,6 +33,17 @@ export async function generateMetadata({
     description: product.description,
     image: product.images?.[0] || "/default-image.jpg",
     url: `/products/${product.slug}`,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [product.images?.[0] || "/default.jpg"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description: product.description,
+      images: [product.images?.[0] || "/default.jpg"],
+    },
   };
 }
 

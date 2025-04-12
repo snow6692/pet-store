@@ -1,9 +1,9 @@
 import { ProductWithCategoriesTable } from "@/lib/types/product.types";
-import Image from "next/image";
 import AddToCartButton from "./buttons/AddToCartButton";
 import { Button } from "./ui/button";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ProductImageSelector from "./ProductImageSelector";
 
 function ProductDetails({ product }: { product: ProductWithCategoriesTable }) {
   const averageRating = product.rating ?? 0; // Handle null case
@@ -26,13 +26,7 @@ function ProductDetails({ product }: { product: ProductWithCategoriesTable }) {
     <div className="container mx-auto px-4 py-8">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="flex flex-col items-center">
-          <Image
-            src={product.images?.[0] || "/default-image.jpg"}
-            alt={product.name}
-            width={500}
-            height={500}
-            className="rounded-lg shadow-lg"
-          />
+          <ProductImageSelector images={product.images || []} />
         </div>
 
         <div className="space-y-4">
