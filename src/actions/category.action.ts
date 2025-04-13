@@ -101,13 +101,14 @@ export async function getAllCategoriesWithoutPagination() {
 export async function getProductsByCategory(category?: string) {
   try {
     const products = await prisma.product.findMany({
-      where: category && category !== "all"
-        ? {
-            category: {
-              name: category,
-            },
-          }
-        : {},
+      where:
+        category && category !== "all"
+          ? {
+              category: {
+                name: category,
+              },
+            }
+          : {},
       orderBy: {
         createdAt: "desc",
       },
