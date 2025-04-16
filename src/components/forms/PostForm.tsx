@@ -135,7 +135,13 @@ export default function PostForm({ post }: { post?: Post }) {
             disabled={form.formState.isSubmitting}
             className="px-6"
           >
-            {form.formState.isSubmitting ? "Posting..." : "Post"}
+            {post
+              ? form.formState.isSubmitting
+                ? "Updating..."
+                : "Update"
+              : form.formState.isSubmitting
+              ? "Posting..."
+              : "Post"}
           </Button>
         </div>
       </form>
