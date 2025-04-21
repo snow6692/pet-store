@@ -36,7 +36,10 @@ async function CommunityPage({ searchParams }: IProps) {
   const { posts } = await getPaginatedPosts({ page: 1, search: q });
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
-      <Notifications />
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Community</h1>
+        <Notifications />
+      </div>
       <PostForm />
       <SearchBar />
       <PostList initialPosts={posts} search={q} />
