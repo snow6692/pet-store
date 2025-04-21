@@ -102,6 +102,9 @@ export async function getPaginatedPosts({
 export async function deletePost(id: string) {
   const user = await cachedUser();
   if (!user) throw new Error("Unauthorized");
-
+  const post = await prisma.post.findUnique({ where: { id } });
+  if (!post) throw new Error("Post not found");
+  if (post.userId !== user.id)
+    throw new Error("Unauthorized to delete the post");
   await prisma.post.delete({ where: { id, userId: user.id } });
 }

@@ -269,7 +269,7 @@ model Upvote {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Post      Post     @relation(fields: [postId], references: [id])
+  Post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
 
   @@unique([userId, postId])
@@ -278,14 +278,14 @@ model Upvote {
 model Comment {
   id      String @id @default(uuid())
   content String
-  post    Post   @relation(fields: [postId], references: [id])
+  post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId  String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   parentId String? // null ? comment : a parent for replies
-  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id]) // parent is the comment that we will reply to
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade) // parent is the comment that we will reply to
   replies  Comment[] @relation("CommentReplies")
 
   createdAt DateTime @default(now())
@@ -298,7 +298,7 @@ model Notification {
   message String
   isRead  Boolean          @default(false)
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   createdAt DateTime @default(now())
