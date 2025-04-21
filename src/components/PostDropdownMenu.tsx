@@ -5,7 +5,7 @@
 import toast from "react-hot-toast";
 import { deletePost } from "@/actions/post.action";
 import UpdatePostDialog from "./dialogs/UpdatePostDialog";
-import { PenBox, TrashIcon } from "lucide-react";
+import { PenBox, Trash2 } from "lucide-react";
 import { Post } from "@prisma/client";
 import ConfirmDeleteDialog from "./dialogs/ConfirmDeleteDialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -62,12 +62,12 @@ export default function PostDropdownMenu({ postId, post }: Props) {
 
   return (
     <div className="flex items-center justify-center gap-4">
-      <ConfirmDeleteDialog onDelete={handleDelete} id={postId} name="Post">
-        <TrashIcon className="text-red-500" />
-      </ConfirmDeleteDialog>
       <UpdatePostDialog post={post}>
         <PenBox className="cursor-pointer text-green-500" />
       </UpdatePostDialog>
+      <ConfirmDeleteDialog onDelete={handleDelete} id={postId} name="Post">
+        <Trash2 className="text-red-500 cursor-pointer" />
+      </ConfirmDeleteDialog>
     </div>
   );
 }

@@ -56,3 +56,28 @@ export const updateUser = async (data: userZod) => {
     console.log(error.message);
   }
 };
+
+export async function getUserById(id: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        email: true,
+        phone: true,
+        address: true,
+        city: true,
+        state: true,
+        postalCode: true,
+        country: true,
+      },
+    });
+    console.log("User found:", user);
+    return user;
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    return null;
+  }
+}

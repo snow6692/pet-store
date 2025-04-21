@@ -28,7 +28,7 @@ function UserIcon({ user }: { user: User }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link href="/profile">Profile</Link>
+          <Link href={`/profile/${user.id}`}>Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/wishlist">Wishlist</Link>

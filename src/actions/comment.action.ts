@@ -5,6 +5,7 @@ import prisma from "@/lib/db";
 import { commentZod } from "@/validations/comment.zod";
 import { cachedUser } from "@/lib/cache/user.cache";
 import { NotificationEnum } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 
 export async function createComment({
   data,
@@ -45,6 +46,48 @@ export async function createComment({
   }
 
   return comment;
+}
+
+export async function updateComment({
+  id,
+  data,
+}: {
+  id: string;
+  data: typeof commentZod._type;
+}) {
+  const user = await cachedUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const validatedData = commentZod.parse(data);
+
+  const comment = await prisma.comment.findUnique({ where: { id } });
+  if (!comment || comment.userId !== user.id) {
+    throw new Error("Unauthorized to update this comment");
+  }
+
+  const updatedComment = await prisma.comment.update({
+    where: { id },
+    data: { content: validatedData.content },
+    include: { user: { select: { id: true, name: true, image: true } } },
+  });
+
+  revalidateTag("posts");
+  revalidateTag("comments");
+  return updatedComment;
+}
+
+export async function deleteComment(id: string) {
+  const user = await cachedUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const comment = await prisma.comment.findUnique({ where: { id } });
+  if (!comment || comment.userId !== user.id) {
+    throw new Error("Unauthorized to delete this comment");
+  }
+
+  await prisma.comment.delete({ where: { id } });
+  revalidateTag("posts");
+  revalidateTag("comments");
 }
 
 export async function getComments(postId: string) {

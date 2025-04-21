@@ -108,3 +108,53 @@ export async function deletePost(id: string) {
     throw new Error("Unauthorized to delete the post");
   await prisma.post.delete({ where: { id, userId: user.id } });
 }
+
+export async function getUserPosts({
+  userId,
+  page = 1,
+  limit = 10,
+}: {
+  userId: string;
+  page?: number;
+  limit?: number;
+}) {
+  const user = await cachedUser();
+  try {
+    const skip = (page - 1) * limit;
+    const posts = await prisma.post.findMany({
+      where: { userId },
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      include: {
+        User: { select: { id: true, name: true, image: true } },
+        comments: true,
+        _count: { select: { upvotes: true } },
+        upvotes: user
+          ? {
+              where: { userId: user.id },
+              select: {
+                id: true,
+                userId: true,
+                postId: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+            }
+          : false,
+      },
+    });
+
+    return {
+      posts: posts.map((post) => ({
+        ...post,
+        isUpvoted: user ? post.upvotes.length > 0 : false,
+      })),
+      hasMore: posts.length === limit,
+      nextCursor: posts.length ? posts[posts.length - 1].id : null,
+    };
+  } catch (error) {
+    console.error("Error fetching user posts:", error);
+    return { posts: [], hasMore: false, nextCursor: null };
+  }
+}
