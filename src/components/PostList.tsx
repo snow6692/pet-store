@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { PostsType } from "@/lib/types/post.types";
@@ -36,7 +34,7 @@ function PostList({
           {
             posts: initialPosts,
             hasMore: true,
-            nextCursor: initialPosts[initialPosts.length - 1]?.id, // send last id
+            nextCursor: initialPosts[initialPosts.length - 1]?.id ?? null,
           },
         ],
         pageParams: [null],

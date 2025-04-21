@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// components/forms/PostForm.tsx
 "use client";
 
 import {
@@ -11,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postZod } from "@/validations/post.zod";
@@ -21,10 +22,15 @@ import { ImageIcon, UserIcon } from "lucide-react";
 import { Post } from "@prisma/client";
 import toast from "react-hot-toast";
 import { upsertPost } from "@/actions/post.action";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 type PostFormValues = z.infer<typeof postZod>;
 
 export default function PostForm({ post }: { post?: Post }) {
+  const queryClient = useQueryClient();
+  const { data: currentUser } = useCurrentUser();
+
   const form = useForm<PostFormValues>({
     resolver: zodResolver(postZod),
     defaultValues: post
@@ -40,26 +46,88 @@ export default function PostForm({ post }: { post?: Post }) {
         },
   });
 
-  const onSubmit = async (data: PostFormValues) => {
-    try {
-      if (post) {
-        await toast.promise(upsertPost({ data, id: post.id }), {
-          loading: "Updating post...",
-          success: "Post updated successfully",
-          error: "Failed to update post",
-        });
-      } else {
-        await toast.promise(upsertPost({ data, id: "" }), {
-          loading: "Creating post...",
-          success: "Post created successfully",
-          error: "Failed to create post",
-        });
+  const mutation = useMutation({
+    mutationFn: (data: PostFormValues) => upsertPost({ data, id: post?.id }),
+    onMutate: async (data) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
 
-        form.reset(); // reset after successful creation
-      }
-    } catch (error) {
+      // Snapshot the previous posts
+      const previousPosts = queryClient.getQueryData(["posts"]);
+
+      // Optimistically update the cache
+      queryClient.setQueryData(["posts"], (old: any) => {
+        if (!old) return old;
+
+        //This will be shown automatically after clicking update or post
+        const newPost = {
+          id: post?.id || `temp-${Date.now()}`, // Temporary ID for new posts
+          title: data.title,
+          description: data.description,
+          image: data.image,
+          userId: currentUser?.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          User: {
+            id: currentUser?.id,
+            name: currentUser?.name,
+            image: currentUser?.image,
+          },
+          comments: [],
+          _count: { upvotes: 0 },
+          isUpvoted: false,
+          upvotes: false,
+        };
+
+        if (post) {
+          // Update existing post
+          return {
+            ...old,
+            pages: old.pages.map((page: any) => ({
+              ...page,
+              posts: page.posts.map((p: any) =>
+                p.id === post.id ? { ...p, ...newPost } : p 
+              ),
+            })),
+          };
+        } else {
+          // Add new post to the first page
+          return {
+            ...old,
+            pages: [
+              {
+                ...old.pages[0],
+                posts: [newPost, ...old.pages[0].posts],
+              },
+              ...old.pages.slice(1),
+            ],
+          };
+        }
+      });
+
+      // Return context for rollback
+      return { previousPosts };
+    },
+    onError: (error, variables, context) => {
+      // Rollback on error
+      queryClient.setQueryData(["posts"], context?.previousPosts);
+      toast.error(post ? "Failed to update post" : "Failed to create post");
       console.error("Error during post creation or update:", error);
-    }
+    },
+    onSuccess: () => {
+      // Invalidate to refetch
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      toast.success(
+        post ? "Post updated successfully" : "Post created successfully"
+      );
+      if (!post) {
+        form.reset(); // Reset form after successful creation
+      }
+    },
+  });
+
+  const onSubmit = (data: PostFormValues) => {
+    mutation.mutate(data);
   };
 
   return (
@@ -70,7 +138,7 @@ export default function PostForm({ post }: { post?: Post }) {
       >
         <div className="flex items-center gap-3">
           <div className="bg-gray-200 p-2 rounded-full">
-            <UserIcon className="w-6 h-6 " />
+            <UserIcon className="w-6 h-6" />
           </div>
           <FormField
             control={form.control}
@@ -132,14 +200,14 @@ export default function PostForm({ post }: { post?: Post }) {
         <div className="flex justify-end">
           <Button
             type="submit"
-            disabled={form.formState.isSubmitting}
+            disabled={form.formState.isSubmitting || mutation.isPending}
             className="px-6"
           >
             {post
-              ? form.formState.isSubmitting
+              ? mutation.isPending
                 ? "Updating..."
                 : "Update"
-              : form.formState.isSubmitting
+              : mutation.isPending
               ? "Posting..."
               : "Post"}
           </Button>

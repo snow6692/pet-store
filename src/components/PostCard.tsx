@@ -1,8 +1,12 @@
-// export default PostCard;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// components/PostCard.tsx
+"use client";
+
 import { PostType } from "@/lib/types/post.types";
+import { commentType } from "@/lib/types/comment.types";
 import Image from "next/image";
 import { format } from "date-fns";
-import { MessageCircle, ThumbsUp } from "lucide-react";
+import { Heart, MessageCircle } from "lucide-react";
 import PostDropdownMenu from "./PostDropdownMenu";
 import CommentForm from "./forms/CommentForm";
 import { useState } from "react";
@@ -10,7 +14,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createUpvote } from "@/actions/upvote.action";
 import { getComments } from "@/actions/comment.action";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { commentType } from "@/lib/types/comment.types";
+import toast from "react-hot-toast";
 
 function CommentList({ postId }: { postId: string }) {
   const { data: comments } = useQuery({
@@ -22,7 +26,7 @@ function CommentList({ postId }: { postId: string }) {
 
   return (
     <div className="space-y-2 mt-4">
-      {comments.map((comment) => (
+      {comments.map((comment: commentType) => (
         <CommentItem
           key={comment.id}
           comment={comment}
@@ -96,13 +100,103 @@ function CommentItem({
   );
 }
 
+// function PostCard({ post }: { post: PostType }) {
+//   const { data: user } = useCurrentUser();
+//   const queryClient = useQueryClient();
+//   const [isUpvoted, setIsUpvoted] = useState(post.isUpvoted); // Initialize with post.isUpvoted
+
+//   const { mutate: upvote } = useMutation({
+//     mutationFn: () => createUpvote(post.id),
+//     onMutate: async () => {
+//       // Cancel any outgoing refetches
+//       await queryClient.cancelQueries({ queryKey: ["posts"] });
+
+//       // Snapshot the previous value
+//       const previousPosts = queryClient.getQueryData(["posts"]);
+
+//       // Optimistically update the upvote count and state
+//       setIsUpvoted((prev) => !prev);
+//       queryClient.setQueryData(["posts"], (old: any) => {
+//         if (!old) return old;
+//         return {
+//           ...old,
+//           pages: old.pages.map((page: any) => ({
+//             ...page,
+//             posts: page.posts.map((p: PostType) =>
+//               p.id === post.id
+//                 ? {
+//                     ...p,
+//                     isUpvoted: !isUpvoted,
+//                     _count: {
+//                       ...p._count,
+//                       upvotes: isUpvoted
+//                         ? p._count.upvotes - 1
+//                         : p._count.upvotes + 1,
+//                     },
+//                   }
+//                 : p
+//             ),
+//           })),
+//         };
+//       });
+
+//       // Return context for rollback
+//       return { previousPosts };
+//     },
+//     onError: (err, variables, context) => {
+//       // Rollback on error
+//       queryClient.setQueryData(["posts"], context?.previousPosts);
+//       setIsUpvoted((prev) => !prev);
+//       toast.error("Failed to update like");
+//     },
+//     onSuccess: (data) => {
+//       console.log("Upvote action result:", data); // Debug log
+//       // Invalidate to refetch
+//       queryClient.invalidateQueries({ queryKey: ["posts"] });
+//     },
+//   });
+
 function PostCard({ post }: { post: PostType }) {
   const { data: user } = useCurrentUser();
-
   const queryClient = useQueryClient();
+  const [isUpvoted, setIsUpvoted] = useState(post.isUpvoted); // Uses post.isUpvoted
 
   const { mutate: upvote } = useMutation({
     mutationFn: () => createUpvote(post.id),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
+      const previousPosts = queryClient.getQueryData(["posts"]);
+      setIsUpvoted((prev) => !prev);
+      queryClient.setQueryData(["posts"], (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: any) => ({
+            ...page,
+            posts: page.posts.map((p: PostType) =>
+              p.id === post.id
+                ? {
+                    ...p,
+                    isUpvoted: !isUpvoted,
+                    _count: {
+                      ...p._count,
+                      upvotes: isUpvoted
+                        ? p._count.upvotes - 1
+                        : p._count.upvotes + 1,
+                    },
+                  }
+                : p
+            ),
+          })),
+        };
+      });
+      return { previousPosts };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(["posts"], context?.previousPosts);
+      setIsUpvoted((prev) => !prev);
+      toast.error("Failed to update like");
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
@@ -155,8 +249,13 @@ function PostCard({ post }: { post: PostType }) {
 
       <div className="flex gap-4 text-sm">
         <button onClick={() => upvote()} className="flex items-center gap-1">
-          <ThumbsUp className="w-4 h-4" />
-          {post._count.upvotes || 0} Upvotes
+          <Heart
+            className={`w-4 h-4 ${
+              isUpvoted ? "fill-red-500 text-red-500" : "text-gray-500"
+            }`}
+          />
+          {post._count.upvotes || 0}{" "}
+          {post._count.upvotes === 1 ? "Like" : "Likes"}
         </button>
         <div className="flex items-center gap-1">
           <MessageCircle className="w-4 h-4" />

@@ -14,6 +14,7 @@ export async function createUpvote(postId: string) {
 
   if (existingUpvote) {
     await prisma.upvote.delete({ where: { id: existingUpvote.id } });
+    console.log(`Upvote removed for post ${postId} by user ${user.id}`); // Debug log
     return { upvoted: false };
   }
 
@@ -27,11 +28,12 @@ export async function createUpvote(postId: string) {
     await prisma.notification.create({
       data: {
         type: NotificationEnum.UPVOTE,
-        message: `${user.name || "Someone"} upvoted your post: "${post.title}"`,
+        message: `${user.name || "Someone"} liked your post: "${post.title}"`,
         userId: post.userId,
       },
     });
   }
 
+  console.log(`Upvote added for post ${postId} by user ${user.id}`); // Debug log
   return { upvote, upvoted: true };
 }
