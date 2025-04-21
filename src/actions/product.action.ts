@@ -184,3 +184,22 @@ export async function getRelatedProducts(
     throw new Error(error.message);
   }
 }
+
+export async function getFeaturedProducts({
+  limit = 6,
+}: { limit?: number } = {}) {
+  try {
+    const products = await prisma.product.findMany({
+      where: { isFeatured: true },
+      take: limit,
+      orderBy: { createdAt: "desc" }, // Or use a popularity metric (e.g., sales)
+      include: {
+        category: true,
+      },
+    });
+    return products;
+  } catch (error) {
+    console.error("Error fetching popular products:", error);
+    return [];
+  }
+}

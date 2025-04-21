@@ -71,7 +71,6 @@ export async function createRating({
   }
 }
 
-
 export async function deleteRating({ id }: { id: string }) {
   const user = await cachedUser();
   if (!user) return;
@@ -135,4 +134,25 @@ export async function getRatingsForProduct({
   const otherRatings = ratings.filter((r) => r.userId !== userId);
 
   return userRating ? [userRating, ...otherRatings] : ratings;
+}
+
+export async function getTopRatings() {
+  return await prisma.rating.findMany({
+    where: {
+      rating: {
+        gte: 4,
+      },
+    },
+    take: 4,
+
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+          id: true,
+        },
+      },
+    },
+  });
 }
