@@ -1,81 +1,3 @@
-// "use client";
-
-// import Link from "next/link";
-// import { Button } from "@/components/ui/button";
-// import { motion } from "framer-motion";
-
-// export default function HeroSection() {
-//   const itemVariants = {
-//     hidden: { opacity: 0, y: 20 },
-//     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-//   };
-
-//   const buttonVariants = {
-//     hover: { scale: 1.05 },
-//     tap: { scale: 0.95 },
-//   };
-
-//   return (
-//     <motion.section
-//       className="relative bg-cover bg-center py-24 text-foreground"
-//       style={{ backgroundImage: "url('/hero-pets.jpg')" }}
-//       initial={{ opacity: 0 }}
-//       animate={{ opacity: 1 }}
-//       transition={{ duration: 0.8 }}
-//     >
-//       <div className="absolute inset-0 bg-black/60" />
-//       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-//         <motion.h2
-//           className="text-4xl md:text-5xl font-bold text-white mb-4"
-//           variants={itemVariants}
-//         >
-//           Everything Your Pet Needs,{" "}
-//           <span className="text-primary">Plus a Community That Cares!</span>
-//         </motion.h2>
-//         <motion.p
-//           className="text-lg md:text-xl text-white/90 mb-8"
-//           variants={itemVariants}
-//         >
-//           Shop premium pet food and supplies, and connect with fellow pet
-//           lovers.
-//         </motion.p>
-//         <motion.div
-//           className="flex justify-center space-x-4"
-//           variants={itemVariants}
-//         >
-//           <motion.div
-//             variants={buttonVariants}
-//             whileHover="hover"
-//             whileTap="tap"
-//           >
-//             <Button
-//               asChild
-//               size="lg"
-//               className="bg-primary text-primary-foreground hover:bg-primary/90"
-//             >
-//               <Link href="/products/1">Shop Now</Link>
-//             </Button>
-//           </motion.div>
-//           <motion.div
-//             variants={buttonVariants}
-//             whileHover="hover"
-//             whileTap="tap "
-//           >
-//             <Button
-//               asChild
-//               size="lg"
-//               variant="outline"
-//               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-//             >
-//               <Link href="/community">Join the Community</Link>
-//             </Button>
-//           </motion.div>
-//         </motion.div>
-//       </div>
-//     </motion.section>
-//   );
-// }
-
 "use client";
 
 import Link from "next/link";
@@ -93,12 +15,7 @@ export default function HeroSection() {
     [autoplay.current]
   );
 
-  const backgroundImages = [
-    "/hero-pets-1.jpg",
-    "/hero-pets-2.jpg",
-    "/hero-pets-3.jpg",
-  ];
-
+  const backgroundImages = ["/squirrel.jpeg", "/bird.jpeg", "/cat.jpeg"];
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -107,8 +24,10 @@ export default function HeroSection() {
       setCurrentSlide(emblaApi.selectedScrollSnap());
     };
     emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
     return () => {
       emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
     };
   }, [emblaApi]);
 
@@ -144,24 +63,30 @@ export default function HeroSection() {
     >
       {/* Background Image Carousel */}
       <div className="absolute inset-0" ref={emblaRef}>
-        <div className="flex">
+        <div className="flex h-full">
           {backgroundImages.map((src, index) => (
             <div
               key={index}
-              className="flex-[0_0_100%] min-w-0 relative"
+              className="flex-[0_0_100%] min-w-0 relative h-full"
               style={{
                 backgroundImage: `url(${src})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                backgroundAttachment: "fixed", // Parallax effect
-                filter: "brightness(0.7)", // Slightly darken for text contrast
+                backgroundRepeat: "no-repeat",
               }}
             >
-              <div className="absolute inset-0 bg-black/50" /> {/* Overlay */}
+              <div className="absolute inset-0 bg-black/30" />
             </div>
           ))}
         </div>
       </div>
+
+      {/* Fallback Message if Images Don't Load */}
+      {backgroundImages.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-800 z-0">
+          <p className="text-white text-lg">No background images available</p>
+        </div>
+      )}
 
       {/* Content */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
