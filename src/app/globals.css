@@ -147,7 +147,6 @@
   animation: subtle-pulse 2s ease-in-out infinite;
 }
 
-
 /* Slide-in animation for rating cards */
 @keyframes slide-in {
   0% {
@@ -161,4 +160,23 @@
 }
 .animate-slide-in {
   animation: slide-in 0.5s ease-out forwards;
+}
+
+@layer utilities {
+  .shadow-glow {
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.5),
+      0 0 24px rgba(59, 130, 246, 0.3);
+  }
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes pulse-subtle {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.85;
+    }
+  }
 }
