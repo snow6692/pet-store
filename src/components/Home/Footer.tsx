@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Mail, Instagram, Twitter } from "lucide-react";
+
+import { Mail, Phone, Linkedin, Github } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Footer() {
@@ -11,18 +10,22 @@ export default function Footer() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2, duration: 0.5 },
+      transition: { staggerChildren: 0.2, duration: 0.6 },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
   };
 
   return (
     <motion.footer
-      className="bg-muted py-12"
+      className="bg-gradient-to-b from-muted to-muted/80 py-16 text-foreground"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
@@ -33,24 +36,25 @@ export default function Footer() {
           className="grid grid-cols-1 md:grid-cols-4 gap-8"
           variants={containerVariants}
         >
+          {/* Brand Section */}
           <motion.div variants={itemVariants}>
-            <h4 className="text-lg font-semibold text-foreground mb-4">
+            <h4 className="text-xl font-bold text-foreground mb-4">
               Pet Haven
             </h4>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Your one-stop shop for premium pet supplies and a vibrant
               community.
             </p>
           </motion.div>
+
+          {/* Explore Section */}
           <motion.div variants={itemVariants}>
-            <h4 className="text-lg font-semibold text-foreground mb-4">
-              Explore
-            </h4>
-            <ul className="space-y-2">
+            <h4 className="text-xl font-bold text-foreground mb-4">Explore</h4>
+            <ul className="space-y-3">
               <li>
                 <Link
-                  href="/products"
-                  className="text-muted-foreground hover:text-foreground"
+                  href="/products/1"
+                  className="text-muted-foreground hover:text-primary text-sm"
                 >
                   Products
                 </Link>
@@ -58,82 +62,83 @@ export default function Footer() {
               <li>
                 <Link
                   href="/community"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-primary text-sm"
                 >
                   Community
                 </Link>
               </li>
             </ul>
           </motion.div>
+
+          {/* Stay Connected Section */}
           <motion.div variants={itemVariants}>
-            <h4 className="text-lg font-semibold text-foreground mb-4">
-              Support
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/about"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-            </ul>
-          </motion.div>
-          <motion.div variants={itemVariants}>
-            <h4 className="text-lg font-semibold text-foreground mb-4">
+            <h4 className="text-xl font-bold text-foreground mb-4">
               Stay Connected
             </h4>
-            <form className="flex gap-2 mb-4">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="bg-background border-border"
-                aria-label="Email for newsletter"
-              />
-              <Button type="submit" size="sm">
-                <Mail className="h-4 w-4" />
-              </Button>
-            </form>
-            <div className="flex space-x-4">
-              <a
-                href="https://instagram.com"
-                className="text-muted-foreground hover:text-foreground"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://twitter.com"
-                className="text-muted-foreground hover:text-foreground"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Phone
+                  className="h-5 w-5 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <a
+                  href="tel:+201060257232"
+                  className="text-muted-foreground hover:text-primary text-sm"
+                  aria-label="Call us at +201060257232"
+                >
+                  +20 106 025 7232
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail
+                  className="h-5 w-5 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <a
+                  href="mailto:ahmedha258258@gmail.com"
+                  className="text-muted-foreground hover:text-primary text-sm"
+                  aria-label="Email us at ahmedha258258@gmail.com"
+                >
+                  ahmedha258258@gmail.com
+                </a>
+              </div>
+              <div className="flex space-x-4">
+                <a
+                  href="https://www.linkedin.com/in/ahmed-hamada-a83309239"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary"
+                  aria-label="Visit our LinkedIn profile"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
+                <a
+                  href="https://github.com/snow6692"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary"
+                  aria-label="Visit our GitHub profile"
+                >
+                  <Github className="h-5 w-5" />
+                </a>
+              </div>
             </div>
           </motion.div>
         </motion.div>
+
+        {/* Divider */}
+        <motion.hr
+          className="my-8 border-t border-muted-foreground/20"
+          variants={itemVariants}
+        />
+
+        {/* Copyright */}
         <motion.div
-          className="mt-8 text-center text-muted-foreground"
+          className="text-center text-muted-foreground text-sm"
           variants={itemVariants}
         >
-          <p>© 2025 Pet Haven. All rights reserved.</p>
+          <p>© 2025 Snow. All rights reserved.</p>
         </motion.div>
       </div>
     </motion.footer>

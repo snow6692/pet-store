@@ -154,5 +154,6 @@ export async function getTopRatings() {
         },
       },
     },
+   
   });
 }

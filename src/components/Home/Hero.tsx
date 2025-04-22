@@ -127,7 +127,7 @@ export default function HeroSection() {
               className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 flex items-center gap-2 px-6 py-3 rounded-full"
               aria-label="Shop now for pet products"
             >
-              <Link href="/products">
+              <Link href="/products/1">
                 Shop Now <ChevronRight className="w-5 h-5" />
               </Link>
             </Button>

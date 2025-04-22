@@ -5,8 +5,7 @@ import FeaturedProductsSlider from "../Home/FeaturedProductsSlider";
 import TestimonialsSection from "../Home/TestimonialsSection";
 import CTASection from "../Home/CTASection";
 import { ProductWithCategories } from "@/lib/types/product.types";
-
-
+import Footer from "../Home/Footer";
 
 type HomePageProps = {
   products: ProductWithCategories[];
@@ -26,6 +25,7 @@ export default function HomePage({ products }: HomePageProps) {
       <CTASection />
 
       {/* Footer */}
+      <Footer />
     </div>
   );
 }
