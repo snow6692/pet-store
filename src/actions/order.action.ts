@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import prisma from "@/lib/db";
@@ -11,9 +12,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2025-02-24.acacia",
 });
 
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+
 export async function placeOrder(formData: orderZod) {
   const parsed = orderZod.safeParse(formData);
   if (!parsed.success) {
@@ -51,28 +50,39 @@ export async function placeOrder(formData: orderZod) {
     );
 
     if (payment === "VISA") {
-      // إنشاء الجلسة فقط بعد التأكد من صحة الطلبات
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
-        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`, // إعادة توجيه بعد الدفع
+        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/my-orders/1?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cart`,
         customer_email: email,
         line_items: cart.items.map((item) => ({
           price_data: {
             currency: "usd",
             product_data: { name: item.product.name },
-            unit_amount: item.product.price * 100,
+            unit_amount: Math.round(item.product.price * 100), // Ensure integer cents
           },
           quantity: item.quantity,
         })),
+        metadata: {
+          userId: user.id,
+          orderData: JSON.stringify({
+            name,
+            email,
+            phone,
+            address,
+            city,
+            state,
+            country,
+            postalCode,
+          }),
+        },
       });
 
-      // قم بتخزين الـ sessionId الذي أرسلته
       return { sessionId: session.id };
     }
 
-    // إذا كان الدفع "CASH_ON_DELIVERY"
+    // Cash on Delivery
     const order = await prisma.order.create({
       data: {
         userId: user.id,
@@ -111,8 +121,8 @@ export async function placeOrder(formData: orderZod) {
     revalidatePath("/dashboard/orders/1");
     revalidateTag("products");
 
-    return { success: "Order placed successfully!", order };
-  } catch (error) {
+    return { success: true, order };
+  } catch (error: any) {
     console.error("Error placing order:", error);
     return { error: "Something went wrong. Please try again." };
   }

@@ -126,3 +126,39 @@
     @apply bg-background text-foreground;
   }
 }
+
+.drop-shadow-glow {
+  filter: drop-shadow(0 0 6px rgba(255, 204, 0, 0.5));
+}
+
+/* Subtle pulse animation for submit button */
+@keyframes subtle-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+}
+.animate-pulse-subtle {
+  animation: subtle-pulse 2s ease-in-out infinite;
+}
+
+
+/* Slide-in animation for rating cards */
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-slide-in {
+  animation: slide-in 0.5s ease-out forwards;
+}
