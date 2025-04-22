@@ -42,6 +42,7 @@
     "react-hot-toast": "^2.5.2",
     "react-inner-image-zoom": "^4.0.1",
     "react-intersection-observer": "^9.16.0",
+    "recharts": "^2.15.3",
     "stripe": "^17.7.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",

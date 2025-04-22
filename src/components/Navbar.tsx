@@ -88,9 +88,6 @@ const glowVariants: Variants = {
 
 export default function Navbar({ user }: { user: User | null }) {
   // Conditionally disable Search and FilterByCategory on /products/* to prevent POST loop
-  const isProductsPage =
-    typeof window !== "undefined" &&
-    window.location.pathname.includes("/products");
 
   return (
     <motion.nav
@@ -177,52 +174,50 @@ export default function Navbar({ user }: { user: User | null }) {
       </div>
 
       {/* Search & Filter */}
-      {!isProductsPage && (
-        <div className="flex items-center justify-center md:justify-end gap-4">
+      <div className="flex items-center justify-center md:justify-end gap-4">
+        <motion.div
+          variants={itemVariants}
+          whileFocus={{ scale: 1.08 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.25, type: "spring", stiffness: 180 }}
+          className="relative group"
+        >
+          <Search />
           <motion.div
-            variants={itemVariants}
-            whileFocus={{ scale: 1.08 }}
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.25, type: "spring", stiffness: 180 }}
-            className="relative group"
-          >
-            <Search />
-            <motion.div
-              variants={glowVariants}
-              initial="initial"
-              whileHover="hover"
-              className="
+            variants={glowVariants}
+            initial="initial"
+            whileHover="hover"
+            className="
                 absolute inset-0 -z-10
                 rounded-md
                 bg-gradient-to-r from-primary/20 to-secondary/20
                 opacity-70 group-hover:opacity-100
                 blur-md
               "
-            />
-          </motion.div>
+          />
+        </motion.div>
+        <motion.div
+          variants={itemVariants}
+          whileFocus={{ scale: 1.08 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.25, type: "spring", stiffness: 180 }}
+          className="relative group"
+        >
+          <FilterByCategory />
           <motion.div
-            variants={itemVariants}
-            whileFocus={{ scale: 1.08 }}
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.25, type: "spring", stiffness: 180 }}
-            className="relative group"
-          >
-            <FilterByCategory />
-            <motion.div
-              variants={glowVariants}
-              initial="initial"
-              whileHover="hover"
-              className="
+            variants={glowVariants}
+            initial="initial"
+            whileHover="hover"
+            className="
                 absolute inset-0 -z-10
                 rounded-md
                 bg-gradient-to-r from-primary/20 to-secondary/20
                 opacity-70 group-hover:opacity-100
                 blur-md
               "
-            />
-          </motion.div>
-        </div>
-      )}
+          />
+        </motion.div>
+      </div>
 
       {/* Icons */}
       <div className="flex items-center justify-center md:justify-end gap-4">

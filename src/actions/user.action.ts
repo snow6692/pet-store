@@ -81,3 +81,7 @@ export async function getUserById(id: string) {
     return null;
   }
 }
+
+export async function getUsersCount() {
+  return await prisma.user.count();
+}
