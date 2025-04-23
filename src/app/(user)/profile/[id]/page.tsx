@@ -45,9 +45,10 @@ const ProfileSkeleton = () => (
   </div>
 );
 
-async function ProfilePage({ params }: { params: { id: string } }) {
+async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   // Fetch the profile user by ID
-  const profileUser = await getUserById(params.id);
+  const id = (await params).id;
+  const profileUser = await getUserById(id);
 
   if (!profileUser) {
     notFound();
