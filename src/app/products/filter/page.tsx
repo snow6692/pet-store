@@ -2,13 +2,11 @@
 import { getProductsByCategory } from "@/actions/category.action";
 import ProductCard from "@/components/cards/ProductCard";
 
-type Props = {
-  searchParams: {
-    category?: string;
-  };
-};
-
-export default async function ProductsPage({ searchParams }: Props) {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category: string }>;
+}) {
   const category = (await searchParams).category || "all";
 
   const products = await getProductsByCategory(category);
