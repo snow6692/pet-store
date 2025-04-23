@@ -1,3 +1,6 @@
+
+
+
 "use client";
 
 import { PostsType } from "@/lib/types/post.types";
@@ -7,6 +10,7 @@ import PostCard from "./PostCard";
 import { getPaginatedPosts } from "@/actions/post.action";
 import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 
 function PostList({
   initialPosts,
@@ -34,7 +38,7 @@ function PostList({
         pages: [
           {
             posts: initialPosts,
-            hasMore: true,
+            hasMore: initialPosts.length === 5, // Assume hasMore if initialPosts is full
             nextCursor: initialPosts[initialPosts.length - 1]?.id ?? null,
           },
         ],
@@ -62,7 +66,15 @@ function PostList({
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+      },
+    },
   };
 
   return (
@@ -77,12 +89,17 @@ function PostList({
           <PostCard post={post} />
         </motion.div>
       ))}
-      <div ref={ref} className="h-10">
+      <div ref={ref} className="h-10 flex justify-center items-center">
         {isFetchingNextPage && (
-          <p className="text-center text-gray-500">Loading more...</p>
+          <div className="flex items-center gap-2 text-gray-400 font-['Inter']">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span>Loading more...</span>
+          </div>
         )}
         {!hasNextPage && posts.length > 0 && (
-          <p className="text-center text-gray-500">No more posts</p>
+          <p className="text-center text-gray-400 font-['Inter']">
+            No more posts
+          </p>
         )}
       </div>
     </motion.div>

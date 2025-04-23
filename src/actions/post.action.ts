@@ -3,6 +3,7 @@
 
 import { cachedUser } from "@/lib/cache/user.cache";
 import prisma from "@/lib/db";
+import { PostsType } from "@/lib/types/post.types";
 import { postZod } from "@/validations/post.zod";
 import { Prisma } from "@prisma/client";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -46,6 +47,8 @@ export async function upsertPost({ data, id }: { data: postZod; id?: string }) {
   return post;
 }
 
+
+
 export async function getPaginatedPosts({
   page = 1,
   limit = 5,
@@ -79,17 +82,26 @@ export async function getPaginatedPosts({
         User: { select: { id: true, name: true, image: true } },
         comments: true,
         _count: { select: { upvotes: true } },
-        upvotes: user
-          ? { where: { userId: user.id }, select: { id: true } }
-          : false,
+        upvotes: {
+          select: {
+            id: true,
+            userId: true,
+            createdAt: true,
+            updatedAt: true,
+            postId: true,
+          },
+          where: user ? { userId: user.id } : {}, // Empty where clause returns no upvotes for non-logged-in users
+        },
       },
     });
 
+    const typedPosts: PostsType = posts.map((post) => ({
+      ...post,
+      isUpvoted: post.upvotes.length > 0,
+    }));
+
     return {
-      posts: posts.map((post) => ({
-        ...post,
-        isUpvoted: user ? post.upvotes.length > 0 : false,
-      })),
+      posts: typedPosts,
       hasMore: posts.length === limit,
       nextCursor: posts.length ? posts[posts.length - 1].id : null,
     };
@@ -98,6 +110,8 @@ export async function getPaginatedPosts({
     return { posts: [], hasMore: false, nextCursor: null };
   }
 }
+
+
 
 export async function deletePost(id: string) {
   const user = await cachedUser();
@@ -108,6 +122,9 @@ export async function deletePost(id: string) {
     throw new Error("Unauthorized to delete the post");
   await prisma.post.delete({ where: { id, userId: user.id } });
 }
+
+
+
 
 export async function getUserPosts({
   userId,
