@@ -1,9 +1,19 @@
-// components/SearchBar.tsx
+
 "use client";
 
 import { Input } from "@/components/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
+import { motion } from "framer-motion";
+
+const searchVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.4, ease: "easeOut" },
+  },
+};
 
 export default function SearchBar() {
   const router = useRouter();
@@ -21,13 +31,18 @@ export default function SearchBar() {
   }, 300);
 
   return (
-    <div className="mb-4">
+    <motion.div
+      variants={searchVariants}
+      initial="hidden"
+      animate="visible"
+      className="mb-4"
+    >
       <Input
         placeholder="Search posts..."
         defaultValue={q}
         onChange={(e) => handleSearch(e.target.value)}
-        className="w-full"
+        className="w-full bg-gray-600/20 border-blue-400/20 text-gray-100 placeholder-gray-400 focus:ring-blue-400/50"
       />
-    </div>
+    </motion.div>
   );
 }

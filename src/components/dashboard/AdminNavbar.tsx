@@ -17,7 +17,7 @@ function AdminNavbar() {
         </Link>
       </Button>
       <Button asChild variant="outline">
-        <Link href="/dashboard/orders">
+        <Link href="/dashboard/orders/1">
           <ShoppingCart className="mr-2 h-4 w-4" /> Orders
         </Link>
       </Button>

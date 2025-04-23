@@ -1,26 +1,5 @@
-// import { getPaginatedPosts } from "@/actions/post.action";
-// import PostForm from "@/components/forms/PostForm";
-// import PostList from "@/components/PostList";
-// import React from "react";
 
-// interface IProps {
-//   searchParams: Promise<{ page?: string }>;
-// }
-// async function CommunityPage({ searchParams }: IProps) {
-//   const page = (await searchParams).page || 1;
-//   const { posts, hasMore } = await getPaginatedPosts(Number(page));
-//   console.log(posts);
-//   return (
-//     <div className="space-y-6 max-w-2xl mx-auto">
-//       <PostForm />
-//       <PostList posts={posts} hasMore={hasMore} page={Number(page)} />
-//     </div>
-//   );
-// }
 
-// export default CommunityPage;
-
-// app/community/page.tsx
 import { getPaginatedPosts } from "@/actions/post.action";
 import PostForm from "@/components/forms/PostForm";
 import Notifications from "@/components/Notifications";
@@ -34,14 +13,20 @@ interface IProps {
 async function CommunityPage({ searchParams }: IProps) {
   const { q = "" } = await searchParams;
   const { posts } = await getPaginatedPosts({ page: 1, search: q });
+
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-6 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Community</h1>
+        <h1 className="text-3xl font-bold  drop-shadow-sm font-['Inter']">
+          Community
+        </h1>
         <Notifications />
       </div>
-      <PostForm />
+      <div className="bg-gray-600/30 backdrop-blur-md rounded-2xl p-6 shadow-lg">
+        <PostForm />
+      </div>
       <SearchBar />
+
       <PostList initialPosts={posts} search={q} />
     </div>
   );

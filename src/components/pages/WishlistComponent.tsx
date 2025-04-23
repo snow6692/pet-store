@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { getWishlist, removeAllWishlist } from "@/actions/wishlist.action";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ProductCard from "../cards/ProductCard";
-import ProductCardSkeleton from "../cards/ProductCardSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ConfirmDeleteCartItem from "../dialogs/ConfirmDeleteCartItem";
 import { Heart, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import Loader from "../shared/Loader";
 
 function WishlistComponent() {
   const queryClient = useQueryClient();
@@ -29,22 +28,7 @@ function WishlistComponent() {
   });
 
   if (isLoading) {
-    return (
-      <Card className="border-none shadow-lg bg-background/95 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-            Your Wishlist
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(3)].map((_, index) => (
-              <ProductCardSkeleton key={index} />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return <Loader />;
   }
 
   if (error) {
