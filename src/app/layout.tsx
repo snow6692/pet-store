@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import Navbar from "@/components/Navbar";
 import { cachedUser } from "@/lib/cache/user.cache";
+import Alert from "@/components/Alert";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -13,6 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("http://localhost:3000"),
   title: "My Store - Pet Food & Pet Lover Community",
   description:
     "Shop premium pet food and supplies at My Store. Join our vibrant community of pet lovers to share tips, stories, and connect with fellow pet enthusiasts.",
@@ -31,11 +33,11 @@ export const metadata: Metadata = {
     title: "My Store - Pet Food & Pet Lover Community",
     description:
       "Discover high-quality pet food and connect with pet lovers at My Store. Shop now and join our community!",
-    url: "https://www.mystore.com", // Replace with your actual domain
+    url: "http://localhost:3000",
     siteName: "My Store",
     images: [
       {
-        url: "/squirrel.jpeg",
+        url: "/bird.jpeg",
         width: 1200,
         height: 630,
         alt: "My Store Logo",
@@ -44,13 +46,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "My Store - Pet Food & Pet Lover Community",
-    description:
-      "Shop premium pet food and join our pet lover community at My Store!",
-    images: ["/squirrel.jpeg"],
-  },
+
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
@@ -64,29 +60,9 @@ export default async function RootLayout({
 }>) {
   const user = await cachedUser();
 
-  // JSON-LD Structured Data for SEO
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "My Store",
-    url: "https://www.mystore.com", // Replace with your actual domain
-    description:
-      "My Store offers premium pet food and supplies, and a community for pet lovers to connect and share.",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://www.mystore.com/search?q={search_term_string}",
-      "query-input": "required name=search_term_string",
-    },
-  };
-
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-      </head>
+      <head></head>
       <body className={`${inter.variable} antialiased bg-gray-700`}>
         <QueryProvider>
           <ThemeProvider
@@ -96,6 +72,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <Navbar user={user} />
+            <Alert />
             <main className="min-h-screen">{children}</main>
             <Toaster
               toastOptions={{

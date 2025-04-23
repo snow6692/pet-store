@@ -1,8 +1,13 @@
 import WishlistComponent from "@/components/pages/WishlistComponent";
-import React from "react";
+import { Loader } from "lucide-react";
+import React, { Suspense } from "react";
 
 function WishlistPage() {
-  return <WishlistComponent />;
+  return (
+    <Suspense fallback={<Loader />}>
+      <WishlistComponent />
+    </Suspense>
+  );
 }
 
 export default WishlistPage;

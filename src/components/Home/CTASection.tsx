@@ -39,11 +39,12 @@ export default function CTASection() {
     >
       {/* Subtle Background Image Overlay */}
       <div
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-10 "
         style={{
-          backgroundImage: "url(/pets-pattern.jpg)",
+          backgroundImage: "url(/bird.jpeg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          opacity: 0.75,
         }}
       />
 
@@ -90,7 +91,7 @@ export default function CTASection() {
           <Users className="w-5 h-5" aria-hidden="true" />
           Join 10,000+ pet lovers already connected!
         </motion.p>
-      </div>  
+      </div>
     </motion.section>
   );
 }

@@ -5,9 +5,10 @@ import ProductCard from "@/components/cards/ProductCard";
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category: string }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const category = (await searchParams).category || "all";
+  
 
   const products = await getProductsByCategory(category);
 

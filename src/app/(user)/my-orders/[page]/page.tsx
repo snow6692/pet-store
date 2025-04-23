@@ -1,37 +1,6 @@
-// import { getMyOrders } from "@/actions/order.action";
-// import MyOrdersPageComponent from "@/components/pages/MyOrdersPageComponent";
-// import MyOrdersHomePagination from "@/components/pagination/MyOrdersHomePagination";
-// import { notFound } from "next/navigation";
-// import React, { Suspense } from "react";
-
-// export default async function MyOrdersPage({
-//   params,
-// }: {
-//   params: Promise<{ page: string }>;
-// }) {
-//   const page = parseInt((await params).page);
-//   const limit = 10;
-//   const data = await getMyOrders({ page, limit });
-//   if (!data || !data.myOrders || data.myOrders.length === 0) {
-//     return notFound();
-//   }
-
-//   return (
-//     <div>
-//       <MyOrdersPageComponent myOrders={data.myOrders} />
-//       <div className=" mt-10">
-//         <Suspense fallback={<p>Loading pagination...</p>}>
-//           <MyOrdersHomePagination page={page} totalPages={data.pages} />
-//         </Suspense>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { getMyOrders } from "@/actions/order.action";
 import MyOrdersPageComponent from "@/components/pages/MyOrdersPageComponent";
 import MyOrdersHomePagination from "@/components/pagination/MyOrdersHomePagination";
-import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 
 export default async function MyOrdersPage({
@@ -42,27 +11,32 @@ export default async function MyOrdersPage({
   const page = parseInt((await params).page);
   const limit = 10;
   const data = await getMyOrders({ page, limit });
-
-  if (!data || !data.myOrders || data.myOrders.length === 0) {
-    return notFound();
-  }
+  const hasOrders = data && data.myOrders && data.myOrders.length > 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Suspense fallback={<MyOrdersSkeleton />}>
-          <MyOrdersPageComponent myOrders={data.myOrders} />
+          {hasOrders ? (
+            <MyOrdersPageComponent myOrders={data.myOrders} />
+          ) : (
+            <div className="text-center py-20 text-muted-foreground text-xl font-medium">
+              No orders yet.
+            </div>
+          )}
         </Suspense>
-        <div className="mt-10 flex justify-center">
-          <Suspense fallback={<p>Loading pagination...</p>}>
-            <MyOrdersHomePagination page={page} totalPages={data.pages} />
-          </Suspense>
-        </div>
+
+        {hasOrders && (
+          <div className="mt-10 flex justify-center">
+            <Suspense fallback={<p>Loading pagination...</p>}>
+              <MyOrdersHomePagination page={page} totalPages={data.pages} />
+            </Suspense>
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
 function MyOrdersSkeleton() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">

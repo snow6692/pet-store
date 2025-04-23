@@ -1,9 +1,11 @@
+export const dynamic = "force-dynamic";
+
+import { getUser } from "@/actions/user.action";
 import UpdateUserForm from "@/components/forms/UpdateUserForm";
-import { cachedUser } from "@/lib/cache/user.cache";
 import React from "react";
 
 async function page() {
-  const user = await cachedUser();
+  const user = await getUser();
   if (!user) return;
 
   return <UpdateUserForm user={user} />;

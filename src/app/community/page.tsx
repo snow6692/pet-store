@@ -1,5 +1,3 @@
-
-
 import { getPaginatedPosts } from "@/actions/post.action";
 import PostForm from "@/components/forms/PostForm";
 import Notifications from "@/components/Notifications";
@@ -22,7 +20,7 @@ async function CommunityPage({ searchParams }: IProps) {
         </h1>
         <Notifications />
       </div>
-      <div className="bg-gray-600/30 backdrop-blur-md rounded-2xl p-6 shadow-lg">
+      <div className=" backdrop-blur-md rounded-2xl p-6 shadow-lg">
         <PostForm />
       </div>
       <SearchBar />
