@@ -1,3 +1,5 @@
+// export const dynamic = "force-static";
+
 import { getRelatedProducts } from "@/actions/product.action";
 import ProductCard from "@/components/cards/ProductCard";
 import ProductCardSkeleton from "@/components/cards/ProductCardSkeleton";
@@ -5,7 +7,6 @@ import RatingForm from "@/components/forms/RatingForm";
 import ProductDetails from "@/components/ProductDetails";
 import RatingList from "@/components/RatingList";
 import { getCachedProducts } from "@/lib/cache/product.cache";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -56,7 +57,20 @@ async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 
-  if (!product) return notFound();
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+        <div className="container mx-auto px-4 py-12">
+          <h1 className="text-3xl font-bold text-center text-red-600">
+            Product Not Found
+          </h1>
+          <p className="text-lg text-center text-muted-foreground mt-4">
+            We are sorry, but the product you are looking for does not exist.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">

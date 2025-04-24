@@ -1,5 +1,4 @@
-
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useEffect, useTransition } from "react";
@@ -112,7 +111,7 @@ export default function Search() {
             transition-all duration-300
             shadow-sm
           "
-          disabled={isPending || isDebouncing}
+          // disabled={isPending || isDebouncing}
         />
         <motion.div
           className="

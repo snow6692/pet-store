@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { getCartItems, clearCart } from "@/actions/cart.action";
 import CartItem from "@/components/CartItem";
@@ -13,6 +14,8 @@ import { ShoppingCart, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { Suspense } from "react";
+import Loader from "@/components/shared/Loader";
 
 export default function CartPage() {
   const queryClient = useQueryClient();
@@ -94,20 +97,22 @@ export default function CartPage() {
               </div>
             ) : (
               <>
-                <AnimatePresence>
-                  {cartItems.map((item) => (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className="group"
-                    >
-                      <CartItem item={item} />
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                <Suspense fallback={<Loader />}>
+                  <AnimatePresence>
+                    {cartItems.map((item) => (
+                      <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="group"
+                      >
+                        <CartItem item={item} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </Suspense>
 
                 <Separator className="bg-gradient-to-r from-muted/30 to-muted/50" />
 

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import WishlistComponent from "@/components/pages/WishlistComponent";
 import { Loader } from "lucide-react";
 import React, { Suspense } from "react";

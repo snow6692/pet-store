@@ -1,7 +1,8 @@
+export const revalidate = 60;
+
 import ProductHomePagination from "@/components/pagination/ProductHomePagination";
 import ProductList from "@/components/ProductList";
 import { getCachedProducts } from "@/lib/cache/product.cache";
-import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -11,7 +12,21 @@ async function ProductPage({ params }: { params: Promise<{ page: string }> }) {
 
   const data = await getCachedProducts(page, limit);
   if (!data || !data.products || data.products.length === 0) {
-    return notFound();
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+        <div className="py-16">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold">
+              No Products Found
+            </h1>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              There are no products available at the moment. Please check back
+              later.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

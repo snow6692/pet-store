@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { CartTotalProvider } from "@/hooks/CartTotalContext";
 
 export default function CartLayout({

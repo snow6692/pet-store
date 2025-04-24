@@ -4,6 +4,7 @@ import { auth, signIn, signOut } from "@/auth";
 import { cachedUser } from "@/lib/cache/user.cache";
 import prisma from "@/lib/db";
 import { userZod } from "@/validations/user.zod";
+import { User } from "@prisma/client";
 
 export const login = async () => {
   await signIn("google");
@@ -11,11 +12,11 @@ export const login = async () => {
 export const logout = async () => {
   await signOut();
 };
-export const getUser = async () => {
+export const getUser = async (): Promise<User | null> => {
   try {
     const session = await auth();
-
     const userId = session?.user?.id;
+
     if (!userId) {
       console.warn("No user ID found in session.");
       return null;
@@ -25,10 +26,10 @@ export const getUser = async () => {
       where: { id: userId },
     });
 
-    return user;
+    return user || null;
   } catch (error) {
     console.error("Error fetching user from database:", error);
-    return null;
+    return null; // Safe for prerendering
   }
 };
 

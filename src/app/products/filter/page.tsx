@@ -1,4 +1,4 @@
-// app/(main)/products/page.tsx
+export const dynamic = "force-dynamic";
 import { getProductsByCategory } from "@/actions/category.action";
 import ProductCard from "@/components/cards/ProductCard";
 
@@ -8,7 +8,6 @@ export default async function ProductsPage({
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const category = (await searchParams).category || "all";
-  
 
   const products = await getProductsByCategory(category);
 

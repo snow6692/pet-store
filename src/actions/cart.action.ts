@@ -4,6 +4,7 @@
 import { cachedUser } from "@/lib/cache/user.cache";
 import prisma from "@/lib/db";
 import { revalidateTag } from "next/cache";
+import { getUser } from "./user.action";
 
 export async function addToCart({
   productId,
@@ -79,7 +80,7 @@ export async function getCartCount() {
 }
 
 export async function getCartItems() {
-  const user = await cachedUser();
+  const user = await getUser();
   if (!user) {
     console.log("User not found");
     return [];
@@ -116,7 +117,7 @@ export async function updateCartItemQuantity(itemId: string, quantity: number) {
 }
 
 export async function clearCart() {
-  const user = await cachedUser();
+  const user = await getUser();
   if (!user) return;
 
   const cart = await prisma.cart.findUnique({

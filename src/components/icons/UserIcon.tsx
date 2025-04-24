@@ -1,6 +1,5 @@
 "use client";
 
-import { User } from "@prisma/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +10,7 @@ import {
 import Image from "next/image";
 import Logout from "../buttons/Logout";
 import Link from "next/link";
+import { User } from "next-auth";
 
 function UserIcon({ user }: { user: User }) {
   if (!user) return;

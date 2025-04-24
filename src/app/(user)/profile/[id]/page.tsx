@@ -1,10 +1,8 @@
-import { cachedUser } from "@/lib/cache/user.cache";
 import Link from "next/link";
 import Image from "next/image";
 import { getUserPosts } from "@/actions/post.action";
-import { getUserById } from "@/actions/user.action";
+import { getUser, getUserById } from "@/actions/user.action";
 import PostList from "@/components/PostList";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 // Skeleton Component
@@ -51,10 +49,21 @@ async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const profileUser = await getUserById(id);
 
   if (!profileUser) {
-    notFound();
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-2xl font-bold">Page Not Found</h1>
+        <p className="text-gray-400">
+          The user you are looking for does not exist or the page has been
+          moved.
+        </p>
+        <Link href="/" className="text-blue-500">
+          Go back to homepage
+        </Link>
+      </div>
+    );
   }
 
-  const currentUser = await cachedUser();
+  const currentUser = await getUser();
 
   // Fetch profile user's posts
   const { posts } = await getUserPosts({ userId: profileUser.id, limit: 10 });

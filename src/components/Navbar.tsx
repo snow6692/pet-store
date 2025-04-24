@@ -8,7 +8,8 @@ import UserIcon from "./icons/UserIcon";
 import Search from "./Search";
 import FilterByCategory from "./FilterByCategory";
 import { motion, Variants } from "framer-motion";
-import { User } from "@prisma/client";
+import { Suspense } from "react";
+import { useSession } from "next-auth/react";
 
 const navVariants: Variants = {
   hidden: { y: -100, opacity: 0 },
@@ -86,8 +87,9 @@ const glowVariants: Variants = {
   },
 };
 
-export default function Navbar({ user }: { user: User | null }) {
-  // Conditionally disable Search and FilterByCategory on /products/* to prevent POST loop
+export default function Navbar() {
+  const { data: session } = useSession();
+  const user = session?.user;
 
   return (
     <motion.nav
@@ -182,7 +184,13 @@ export default function Navbar({ user }: { user: User | null }) {
           transition={{ duration: 0.25, type: "spring", stiffness: 180 }}
           className="relative group"
         >
-          <Search />
+          <Suspense
+            fallback={
+              <div className="w-[180px] h-10 bg-background/50 rounded-lg animate-pulse" />
+            }
+          >
+            <Search />
+          </Suspense>
           <motion.div
             variants={glowVariants}
             initial="initial"
@@ -203,7 +211,13 @@ export default function Navbar({ user }: { user: User | null }) {
           transition={{ duration: 0.25, type: "spring", stiffness: 180 }}
           className="relative group"
         >
-          <FilterByCategory />
+          <Suspense
+            fallback={
+              <div className="w-[180px] h-10 bg-background/50 rounded-lg animate-pulse" />
+            }
+          >
+            <FilterByCategory />
+          </Suspense>
           <motion.div
             variants={glowVariants}
             initial="initial"
@@ -254,6 +268,7 @@ export default function Navbar({ user }: { user: User | null }) {
           ) : (
             <Login aria-label="Log in" />
           )}
+
           <motion.div
             variants={glowVariants}
             initial="initial"

@@ -1,7 +1,6 @@
 import ProductPagination from "@/components/pagination/ProductPagination ";
 import ProductsTableComponent from "@/components/tables/ProductsTableComponent";
 import { getCachedProducts } from "@/lib/cache/product.cache";
-import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 
 async function ProductsTablePage({
@@ -14,7 +13,14 @@ async function ProductsTablePage({
 
   const data = await getCachedProducts(page, limit);
   if (!data || !data.products || data.products.length === 0) {
-    return notFound();
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-2xl font-bold">No Products Found</h1>
+        <p className="text-gray-400">
+          There are no products available at the moment.
+        </p>
+      </div>
+    );
   }
   return (
     <div>

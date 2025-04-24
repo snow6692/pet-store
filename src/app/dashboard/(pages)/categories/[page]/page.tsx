@@ -1,7 +1,6 @@
 import CategoryPagination from "@/components/pagination/CategoryPagination";
 import CategoryTable from "@/components/tables/CategoryTable";
 import { getCachedCategories } from "@/lib/cache/category.cache";
-import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 
 async function CategoryPaginationPage({
@@ -12,13 +11,22 @@ async function CategoryPaginationPage({
   const page = parseInt((await params).page);
   const limit = 10;
   const data = await getCachedCategories(page, limit);
+
   if (!data || !data.categories || data.categories.length === 0) {
-    return notFound();
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-2xl font-bold">No Categories Found</h1>
+        <p className="text-gray-400">
+          There are no categories available at the moment.
+        </p>
+      </div>
+    );
   }
+
   return (
     <div>
       <CategoryTable categories={data.categories} />
-      <div className=" mt-10">
+      <div className="mt-10">
         <Suspense fallback={<p>Loading pagination...</p>}>
           <CategoryPagination page={page} totalPages={data.pages} />
         </Suspense>

@@ -1,8 +1,11 @@
+export const dynamic = "force-dynamic";
+
 import { getPaginatedPosts } from "@/actions/post.action";
 import PostForm from "@/components/forms/PostForm";
 import Notifications from "@/components/Notifications";
 import PostList from "@/components/PostList";
 import SearchBar from "@/components/SearchBar";
+import { Suspense } from "react";
 
 interface IProps {
   searchParams: Promise<{ page?: string; q?: string }>;
@@ -23,7 +26,13 @@ async function CommunityPage({ searchParams }: IProps) {
       <div className=" backdrop-blur-md rounded-2xl p-6 shadow-lg">
         <PostForm />
       </div>
-      <SearchBar />
+      <Suspense
+        fallback={
+          <div className="w-full h-10 bg-gray-600/20 rounded-lg animate-pulse" />
+        }
+      >
+        <SearchBar />
+      </Suspense>
 
       <PostList initialPosts={posts} search={q} />
     </div>

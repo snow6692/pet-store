@@ -1,4 +1,6 @@
 "use client";
+export const dynamic = "force-dynamic";
+
 import DashboardCard from "@/components/cards/DashboardCard";
 import Link from "next/link";
 import { motion } from "framer-motion";

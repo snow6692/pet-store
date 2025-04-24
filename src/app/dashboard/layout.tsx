@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getUser } from "@/actions/user.action";
 import AdminNavbar from "@/components/dashboard/AdminNavbar";
 import { redirect } from "next/navigation";

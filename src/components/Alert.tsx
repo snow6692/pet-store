@@ -15,7 +15,7 @@ export default function AlertComponent() {
         type: "spring",
         stiffness: 100,
       }}
-      className="mx-auto mt-4 w-full px-4"
+      className="mx-auto mt-4 px-4 w-full"
     >
       <Alert className="bg-red-600 text-white shadow-lg rounded-lg border-none">
         <AlertCircle className="h-4 w-4 text-white" />
