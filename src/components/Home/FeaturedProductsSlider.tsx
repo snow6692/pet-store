@@ -166,7 +166,7 @@ export default function FeaturedProductsSlider({
             variant="link"
             className="text-primary hover:text-primary/80"
           >
-            <Link href="/products">
+            <Link href="/products/1">
               View All Products <ChevronRight className="ml-1 h-4 w-4" />
             </Link>
           </Button>
