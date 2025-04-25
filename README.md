@@ -58,6 +58,9 @@ This project was built to offer users a space where they can:
 | Stripe       | Payment integration     |
 | NextAuth     | Authentication          |
 
+
+
+Developed by [Ahmed]([https://www.linkedin.com/posts/ahmed-hamada-a83309239_id-like-to-show-you-my-new-project-a-product-activity-7302180906822254592-EYQq?utm_source=share&utm_medium=member_desktop&rcm=ACoAADtP9sMBLkj7xcgfHMKup7JtZS9cX6MfViY](https://www.linkedin.com/posts/ahmed-hamada-a83309239_just-launched-a-full-stack-pet-community-activity-7321457453622018051-jMjz?utm_source=share&utm_medium=member_desktop&rcm=ACoAADtP9sMBLkj7xcgfHMKup7JtZS9cX6MfViY)) – feel free to connect or give feedback!
 ## 📦 Installation
 
 ```bash
