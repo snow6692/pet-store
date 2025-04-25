@@ -8,11 +8,15 @@ function ProductImageSelector({ images }: { images: string[] }) {
   const [selectedImage, setSelectedImage] = useState(images[0]);
 
   return (
-    <div>
-      <ZoomableImage src={selectedImage} />
+    <div className="w-full">
+      <div className="relative w-full group">
+        <div className="rounded-lg overflow-hidden shadow-md transition-shadow duration-300 group-hover:shadow-xl">
+          <ZoomableImage src={selectedImage} />
+        </div>
+      </div>
 
       {/* Thumbnails */}
-      <div className="flex flex-wrap gap-4 mt-4">
+      <div className="flex flex-wrap gap-4 mt-4 justify-center">
         {images.map((image, index) => (
           <div
             key={index}

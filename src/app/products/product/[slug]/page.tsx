@@ -73,7 +73,7 @@ async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen min-w-full bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 py-12 space-y-12">
         {/* Product Details */}
         <section>
