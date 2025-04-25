@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pet Store 🐾
 
-## Getting Started
+A full-stack platform that combines E-Commerce functionality with a social community for pet lovers.
 
-First, run the development server:
+## 🌐 Live Website
+
+[https://pet-store-snow66926692.vercel.app/](https://pet-store-snow66926692.vercel.app/)
+
+## 🧠 Overview
+
+This project was built to offer users a space where they can:
+
+- **Shop** for pets and related products.
+- **Interact** with a community through posts, comments, and replies.
+- **Manage** their orders and wishlist.
+- **Admins** can control products, categories, and orders.
+
+## ✨ Features
+
+### E-Commerce
+
+- Product listings, categories & filters
+- Shopping cart and wishlist
+- Stripe checkout and cash on delivery
+- Order history and details page
+
+### Admin Dashboard
+
+- Manage products
+- Manage categories
+- Manage user orders
+
+### Community
+
+- Post creation and deletion
+- Upvotes, comments, and threaded replies
+- User profiles showing their posts
+- Real-time notifications
+- Pagination and infinite scroll
+
+## 🔐 Authentication
+
+- Google OAuth via **NextAuth.js**
+- Server-side session handling
+
+## 🛠️ Tech Stack
+
+| Technology   | Purpose                 |
+| ------------ | ----------------------- |
+| Next.js 15   | Framework               |
+| React 19     | UI Library              |
+| Tailwind CSS | Styling                 |
+| Prisma       | ORM                     |
+| PostgreSQL   | Database                |
+| React Query  | Data fetching / caching |
+| Zod          | Validation              |
+| UploadThing  | File uploads            |
+| Stripe       | Payment integration     |
+| NextAuth     | Authentication          |
+
+## 📦 Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/snow6692/pet-store.git
+
+# Install dependencies
+npm install
+
+# Generate Prisma client
+npx prisma generate
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
